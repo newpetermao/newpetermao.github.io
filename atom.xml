@@ -44,10 +44,10 @@
   
   <entry>
     <title>hello</title>
-    <link href="http://yoursite.com/2017/02/06/hello/"/>
-    <id>http://yoursite.com/2017/02/06/hello/</id>
-    <published>2017-02-06T09:28:02.000Z</published>
-    <updated>2017-02-06T09:28:30.000Z</updated>
+    <link href="http://yoursite.com/2016/02/06/hello/"/>
+    <id>http://yoursite.com/2016/02/06/hello/</id>
+    <published>2016-02-06T09:28:02.000Z</published>
+    <updated>2017-02-06T09:52:21.000Z</updated>
     
     <content type="html"><![CDATA[<p>123</p>
 ]]></content>
