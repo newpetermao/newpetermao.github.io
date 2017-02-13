@@ -96,14 +96,14 @@
 <meta property="og:description" content="写在开头将博客从wordpress迁移到github pages+hexo了。
 相比于wordpress之类的自己买主机建站，对于我个人来讲，采用github+hexo类的静态化方案有如下几个好处：a) 免费，不限流量b) git版本管理，方便追查修改记录c) 把精力用来写文章(像ci代码一样方便)，不用再做网管了d) 学习下markdown之类的写作语法e) 了解下无后端的前端解决方案
 缺点：a">
-<meta property="og:image" content="http://petermao.com/shaoyang.jpeg">
-<meta property="og:updated_time" content="2017-02-13T08:03:27.000Z">
+<meta property="og:image" content="http://olan5qt5p.bkt.clouddn.com/shaoyang.jpeg">
+<meta property="og:updated_time" content="2017-02-13T08:07:14.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="blog从wordpress迁移到github pages&hexo">
 <meta name="twitter:description" content="写在开头将博客从wordpress迁移到github pages+hexo了。
 相比于wordpress之类的自己买主机建站，对于我个人来讲，采用github+hexo类的静态化方案有如下几个好处：a) 免费，不限流量b) git版本管理，方便追查修改记录c) 把精力用来写文章(像ci代码一样方便)，不用再做网管了d) 学习下markdown之类的写作语法e) 了解下无后端的前端解决方案
 缺点：a">
-<meta name="twitter:image" content="http://petermao.com/shaoyang.jpeg">
+<meta name="twitter:image" content="http://olan5qt5p.bkt.clouddn.com/shaoyang.jpeg">
 
 
 
@@ -370,9 +370,9 @@
 <h3 id="hexo日常使用命令"><a href="#hexo日常使用命令" class="headerlink" title="hexo日常使用命令"></a>hexo日常使用命令</h3><h3 id="url格式"><a href="#url格式" class="headerlink" title="url格式"></a>url格式</h3><p>hexo的默认格式如下：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">permalink: :year/:month/:day/:title/</div></pre></td></tr></table></figure></p>
 <p>按照我以前wordpress的格式进行了调整：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">permalink: :category/:title/</div></pre></td></tr></table></figure></p>
 <h3 id="文章阅读数统计"><a href="#文章阅读数统计" class="headerlink" title="文章阅读数统计"></a>文章阅读数统计</h3><p>参考3)。存储用了leanloud。需要先注册。<br>如果用的next主题，很简单。在leancloud注册后，将_config.xml中的开关打开(搜索leancloud)即可。<br>如果其他主题，需要参考3)所示的链接加入脚本代码。</p>
-<h3 id="图片"><a href="#图片" class="headerlink" title="图片"></a>图片</h3><p>markdown的图片引入语法为:”![title](<a href="http://olan5qt5p.bkt.clouddn.com/shaoyang.jpeg)&quot;。" target="_blank" rel="external">http://olan5qt5p.bkt.clouddn.com/shaoyang.jpeg)&quot;。</a><br>图片加速。参考4)。存储用的七牛云。可以用我的这个<a href="https://portal.qiniu.com/signup?code=3law7drkgerf6" title="七牛邀请链接" target="_blank" rel="external">七牛邀请链接</a>注册。注册后直接引用其生成的链接地址即可。批量工具可以用<a href="https://github.com/qiniu/qshell/blob/master/README.md" target="_blank" rel="external">qshell</a>。简单用法如下。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># qshell account ak sk</span></div><div class="line"><span class="comment"># qshell qupload qshell.config</span></div><div class="line"><span class="comment"># cat qshell.config</span></div><div class="line">&#123;</div><div class="line">   <span class="string">"src_dir"</span>            :   <span class="string">"source/cdn"</span>,</div><div class="line">   <span class="string">"bucket"</span>             :   <span class="string">"blog"</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="图片"><a href="#图片" class="headerlink" title="图片"></a>图片</h3><p>markdown的图片引入语法为:”![title](<a href="http://a.com/123.jpeg)&quot;。" target="_blank" rel="external">http://a.com/123.jpeg)&quot;。</a><br>图片加速。参考4)。存储用的七牛云。可以用我的这个<a href="https://portal.qiniu.com/signup?code=3law7drkgerf6" title="七牛邀请链接" target="_blank" rel="external">七牛邀请链接</a>注册。注册后直接引用其生成的链接地址即可。批量工具可以用<a href="https://github.com/qiniu/qshell/blob/master/README.md" target="_blank" rel="external">qshell</a>。简单用法如下。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># qshell account ak sk</span></div><div class="line"><span class="comment"># qshell qupload qshell.config</span></div><div class="line"><span class="comment"># cat qshell.config</span></div><div class="line">&#123;</div><div class="line">   <span class="string">"src_dir"</span>            :   <span class="string">"source/cdn"</span>,</div><div class="line">   <span class="string">"bucket"</span>             :   <span class="string">"blog"</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>先设置ak/sk，然后用quload批量上传。其中src_dir为本地目录， bucket为qiniu上的bucket。</p>
-<p><img src="http://petermao.com/shaoyang.jpeg" alt=""></p>
+<p><img src="http://olan5qt5p.bkt.clouddn.com/shaoyang.jpeg" alt="邵阳崀山"></p>
 <h2 id="致谢与参考"><a href="#致谢与参考" class="headerlink" title="致谢与参考"></a>致谢与参考</h2><p>1 <a href="http://www.ruanyifeng.com/blog/2012/08/blogging_with_jekyll.html" target="_blank" rel="external">搭建一个免费的，无限流量的Blog—-github Pages和Jekyll入门</a></p>
 <p>2 <a href="http://www.ezlippi.com//blog/2016/02/jekyll-to-hexo.html" target="_blank" rel="external">Jekyll迁移到Hexo搭建个人博客</a></p>
 <p>3 <a href="http://huangnx.com/2016/03/22/BlogNextReadCount/" target="_blank" rel="external">Hexo Next主题添加文章阅读量统计功能</a></p>
