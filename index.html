@@ -240,7 +240,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/01/16/hello-github-pages-hexo/">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/blog/hello-github-pages-hexo/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="John Doe">
@@ -265,7 +265,7 @@
             
               
                 
-                <a class="post-title-link" href="/2017/01/16/hello-github-pages-hexo/" itemprop="url">
+                <a class="post-title-link" href="/blog/hello-github-pages-hexo/" itemprop="url">
                   blog从wordpress迁移到github pages&hexo
                 </a>
               
@@ -302,8 +302,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/博客/" itemprop="url" rel="index">
-                    <span itemprop="name">博客</span>
+                  <a href="/categories/blog/" itemprop="url" rel="index">
+                    <span itemprop="name">blog</span>
                   </a>
                 </span>
 
@@ -320,8 +320,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/01/16/hello-github-pages-hexo/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/16/hello-github-pages-hexo/" itemprop="commentCount"></span>
+                <a href="/blog/hello-github-pages-hexo/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="blog/hello-github-pages-hexo/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -331,7 +331,7 @@
 
           
           
-             <span id="/2017/01/16/hello-github-pages-hexo/" class="leancloud_visitors" data-flag-title="blog从wordpress迁移到github pages&hexo">
+             <span id="/blog/hello-github-pages-hexo/" class="leancloud_visitors" data-flag-title="blog从wordpress迁移到github pages&hexo">
                <span class="post-meta-divider">|</span>
                
                  <span>阅读次数 </span>
@@ -357,14 +357,18 @@
       
         
           
-            <h1 id="写在开头"><a href="#写在开头" class="headerlink" title="写在开头"></a>写在开头</h1><p>将博客从wordpress迁移到github pages+hexo了。</p>
+            <h2 id="写在开头"><a href="#写在开头" class="headerlink" title="写在开头"></a>写在开头</h2><p>将博客从wordpress迁移到github pages+hexo了。</p>
 <p>相比于wordpress之类的自己买主机建站，对于我个人来讲，采用github+hexo类的静态化方案有如下几个好处：<br>a) 免费，不限流量<br>b) git版本管理，方便追查修改记录<br>c) 把精力用来写文章(像ci代码一样方便)，不用再做网管了<br>d) 学习下markdown之类的写作语法<br>e) 了解下无后端的前端解决方案</p>
 <p>缺点：<br>a) 折腾。除了markdown语法，各种各样的动态功能往往需要借助外部服务。不过这也是优点。刚好可以熟悉下业内对应的解决方案。<br>b) 静态网页。动态功能需要借助外部服务。<br>c) 需要遍历生成。多一步静态化生成的步骤。网站越大，生成时间也越长。</p>
 <p>严格来讲，对于一般的博客，blog数量有限，c不是问题。a与b换个角度也是优点。</p>
-<h2 id="实践之路"><a href="#实践之路" class="headerlink" title="实践之路"></a>实践之路</h2><p>入门学习。参考1)。相比于Jekyll，hexo似乎更简单。<br>文章阅读数统计。参考3)。存储用了QingCloud。<br>图片加速。参考4)。存储用的七牛云。注册可以用我的这个<a href="https://portal.qiniu.com/signup?code=3law7drkgerf6" title="七牛邀请链接" target="_blank" rel="external">七牛邀请链接</a>注册。</p>
+<h2 id="实践之路"><a href="#实践之路" class="headerlink" title="实践之路"></a>实践之路</h2><h3 id="入门学习"><a href="#入门学习" class="headerlink" title="入门学习"></a>入门学习</h3><p>参考1)。一开始用的Jekyll。后来迁移到了hexo。<br>githubpages+hexo迁移。参考2)。相比于Jekyll，hexo似乎更简单。</p>
+<h3 id="文章阅读数统计"><a href="#文章阅读数统计" class="headerlink" title="文章阅读数统计"></a>文章阅读数统计</h3><p>参考3)。存储用了QingCloud。<br>如果用的next主题，很简单。在QingCloud注册后，将_config.xml中的开关打开即可。<br>如果其他主题，需要参考3)所示的链接加入脚本代码。</p>
+<h3 id="图片"><a href="#图片" class="headerlink" title="图片"></a>图片</h3><p>markdown的图片引入语法为:”![title](<a href="http://olan5qt5p.bkt.clouddn.com/shaoyang.jpeg)&quot;。" target="_blank" rel="external">http://olan5qt5p.bkt.clouddn.com/shaoyang.jpeg)&quot;。</a><br>参考4)。存储用的七牛云。可以用我的这个<a href="https://portal.qiniu.com/signup?code=3law7drkgerf6" title="七牛邀请链接" target="_blank" rel="external">七牛邀请链接</a>注册。</p>
+<h3 id="url格式"><a href="#url格式" class="headerlink" title="url格式"></a>url格式</h3><p>hexo的默认格式如下：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">permalink: :year/:month/:day/:title/</div></pre></td></tr></table></figure></p>
+<p>按照我以前wordpress的格式进行了调整：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">permalink: :category/:title/</div></pre></td></tr></table></figure></p>
 <p><img src="http://olan5qt5p.bkt.clouddn.com/shaoyang.jpeg" alt=""></p>
 <h2 id="致谢与参考"><a href="#致谢与参考" class="headerlink" title="致谢与参考"></a>致谢与参考</h2><p>1 搭建一个免费的，无限流量的Blog—-github Pages和Jekyll入门<br><a href="http://www.ruanyifeng.com/blog/2012/08/blogging_with_jekyll.html" target="_blank" rel="external">http://www.ruanyifeng.com/blog/2012/08/blogging_with_jekyll.html</a></p>
-<p>2<br>3 Hexo Next主题添加文章阅读量统计功能<br><a href="http://huangnx.com/2016/03/22/BlogNextReadCount/" target="_blank" rel="external">http://huangnx.com/2016/03/22/BlogNextReadCount/</a></p>
+<p>2<br>3 Hexo Next主题添加文章阅读量统计功能<br><a href="http://huangnx.com/2016/03/22/BlogNextReadCount/" target="_blank" rel="external">http://huangnx.com/2016/03/22/BlogNextReadCount/</a><br>4 图片存储</p>
 
           
         
@@ -403,7 +407,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/01/16/hello-world/">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/blog/hello-world/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="John Doe">
@@ -428,7 +432,7 @@
             
               
                 
-                <a class="post-title-link" href="/2016/01/16/hello-world/" itemprop="url">
+                <a class="post-title-link" href="/blog/hello-world/" itemprop="url">
                   Hello World
                 </a>
               
@@ -456,6 +460,25 @@
           </span>
 
           
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              
+                <span>分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/blog/" itemprop="url" rel="index">
+                    <span itemprop="name">blog</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
 
           
             
@@ -464,8 +487,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016/01/16/hello-world/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/16/hello-world/" itemprop="commentCount"></span>
+                <a href="/blog/hello-world/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="blog/hello-world/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -475,7 +498,7 @@
 
           
           
-             <span id="/2016/01/16/hello-world/" class="leancloud_visitors" data-flag-title="Hello World">
+             <span id="/blog/hello-world/" class="leancloud_visitors" data-flag-title="Hello World">
                <span class="post-meta-divider">|</span>
                
                  <span>阅读次数 </span>
@@ -591,7 +614,7 @@
           
             <div class="site-state-item site-state-categories">
               
-                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-count">2</span>
                 <span class="site-state-item-name">分类</span>
               
             </div>
@@ -600,7 +623,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-count">3</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
