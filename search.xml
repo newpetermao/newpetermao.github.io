@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  
+    
+    <entry>
+      <title><![CDATA[blog从wordpress迁移到github pages&hexo]]></title>
+      <url>%2Fblog%2Fhello-github-pages-hexo%2F</url>
+      <content type="text"><![CDATA[写在开头将博客从wordpress系统迁移到github pages+hexo了。 相比于wordpress之类的自己买主机建站，对于我个人来讲，采用github+hexo类的静态化方案有如下几个好处：a) 免费，不限流量b) git版本管理，方便追查修改记录c) 把精力用来写文章(像ci代码一样方便)，不用再做网管了d) 学习下markdown之类的写作语法e) 了解下无后端的前端解决方案 缺点：a) 折腾。除了markdown语法，各种各样的动态功能往往需要借助外部服务。不过这也是优点。刚好可以熟悉下业内对应的解决方案。b) 静态网页。动态功能需要借助外部服务。c) 需要遍历生成。多一步静态化生成的步骤。网站越大，生成时间也越长。 严格来讲，对于一般的博客，blog数量有限，c不是问题。a与b换个角度也是优点。 实践之路入门学习参考1)。一开始用的Jekyll。后来迁移到了hexo。githubpages+hexo迁移。参考2)。相比于Jekyll，hexo似乎更简单。 hexo日常使用命令url格式hexo的默认格式如下：1permalink: :year/:month/:day/:title/ 按照我以前wordpress的格式进行了调整：1permalink: :category/:title/ 文章阅读数统计参考3)。存储用了leanloud。需要先注册。如果用的next主题，很简单。在leancloud注册后，将_config.xml中的开关打开(搜索leancloud)即可。如果其他主题，需要参考3)所示的链接加入脚本代码。 图片markdown的图片引入语法为:”![title](http://a.com/123.jpeg)&quot;。图片加速。参考4)。存储用的七牛云。可以用我的这个七牛邀请链接注册。注册后直接引用其生成的链接地址即可。批量工具可以用qshell。简单用法如下。12345678# qshell account ak sk# qshell qupload qshell.config# cat qshell.config&#123; "src_dir" : "source/cdn", "bucket" : "blog", "rescan_local" : true&#125; 先设置ak/sk，然后用quload批量上传。其中src_dir为本地目录， bucket为qiniu上的bucket。 搜索重点了解下其搜索解决方案。local search:原理是通过hexo-generator-search插件在本地生成一个文件，搜索的时候检索这个文件。 algolia: 先注册(非常简单，New Index即可)，然后按如下方式修改本地配置。version为5.1.0，基本只需要简单改下配置即可，但还是有个bug导致被坑了良久。1234567891011121314151617181920212223242526# npm install hexo-algolia --save# vim _config.ymlalgolia: applicationID: 'yours' apiKey: 'yours' adminApiKey: 'yours' indexName: 'blog' chunkSiz: 5000# vim themes/next/_config.yml algolia_search: enable: true hits: per_page: 10 labels: input_placeholder: 输入关键词 hits_empty: "没有找到与 $&#123;query&#125; 相关的内容" hits_stats: "$&#123;hits&#125;条相关记录，共耗时 $&#123;time&#125; ms"# vim themes/next/layout/_partials/header.swig (note:我这版本已经有了, 不需要改) &#123;% elseif config.search || theme.algolia_search.enable %&#125; &lt;a href="javascript:;" class="popup-trigger"&gt;# vim node_modules/hexo-algolia/lib/command.js var storedPost = _.pick(data, ['title', 'date', 'slug', 'content', 'path', 'excerpt', 'permalink']);# hexo algolia Swiftype、 微搜索 打赏现在支付宝与微信支付都通过扫码就能实现支付，所以原理就是将你的支付账号用图片加载进来。next现在已经集成了该功能。但需要自行打开相关开关。12345# ls themes/next/layout/_macro/reward.swig# tail -n 3 themes/next/_config.ymlreward_comment: Enjoy it ? Donate me ! 欣赏此文？求鼓励，求支持！alipay: http://static.ixirong.com/pic/donate/alipay1.webpwechatpay: http://static.ixirong.com/pic/donate/wechat.png 致谢与参考1 搭建一个免费的，无限流量的Blog—-github Pages和Jekyll入门 2 Jekyll迁移到Hexo搭建个人博客 3 Hexo Next主题添加文章阅读量统计功能 4 图片存储使用七牛为Hexo存储图片qshell 5 搜索hexo+next添加algolia搜索next algolia bug 5 next打赏功能 6 next中文帮助文档]]></content>
+    </entry>
+
+    
+    <entry>
+      <title><![CDATA[Hello World]]></title>
+      <url>%2Fblog%2Fhello-world%2F</url>
+      <content type="text"><![CDATA[Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick StartCreate a new post1$ hexo new "My New Post" More info: Writing Run server1$ hexo server More info: Server Generate static files1$ hexo generate More info: Generating Deploy to remote sites1$ hexo deploy More info: Deployment]]></content>
+    </entry>
+
+    
+  
+  
+</search>

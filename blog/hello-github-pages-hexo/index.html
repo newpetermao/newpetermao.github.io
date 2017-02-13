@@ -96,7 +96,7 @@
 相比于wordpress之类的自己买主机建站，对于我个人来讲，采用github+hexo类的静态化方案有如下几个好处：a) 免费，不限流量b) git版本管理，方便追查修改记录c) 把精力用来写文章(像ci代码一样方便)，不用再做网管了d) 学习下markdown之类的写作语法e) 了解下无后端的前端解决方案">
 <meta property="og:image" content="http://olan5qt5p.bkt.clouddn.com/algolia.png">
 <meta property="og:image" content="http://olan5qt5p.bkt.clouddn.com/shaoyang.jpeg">
-<meta property="og:updated_time" content="2017-02-13T17:37:44.000Z">
+<meta property="og:updated_time" content="2017-02-13T17:47:22.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="blog从wordpress迁移到github pages&hexo">
 <meta name="twitter:description" content="写在开头将博客从wordpress系统迁移到github pages+hexo了。
@@ -258,27 +258,12 @@
   
     <div class="site-search">
       
-  
-  <div class="algolia-popup popup">
-    <div class="algolia-search">
-      <div class="algolia-search-input-icon">
-        <i class="fa fa-search"></i>
-      </div>
-      <div class="algolia-search-input" id="algolia-search-input"></div>
-    </div>
-
-    <div class="algolia-results">
-      <div id="algolia-stats"></div>
-      <div id="algolia-hits"></div>
-      <div id="algolia-pagination" class="algolia-pagination"></div>
-    </div>
-
-    <span class="popup-btn-close">
-      <i class="fa fa-times-circle"></i>
-    </span>
-  </div>
-
-
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
 
 
     </div>
@@ -428,7 +413,7 @@
 <h3 id="文章阅读数统计"><a href="#文章阅读数统计" class="headerlink" title="文章阅读数统计"></a>文章阅读数统计</h3><p>参考3)。存储用了leanloud。需要先注册。<br>如果用的next主题，很简单。在leancloud注册后，将_config.xml中的开关打开(搜索leancloud)即可。<br>如果其他主题，需要参考3)所示的链接加入脚本代码。</p>
 <h3 id="图片"><a href="#图片" class="headerlink" title="图片"></a>图片</h3><p>markdown的图片引入语法为:”![title](<a href="http://a.com/123.jpeg)&quot;。" target="_blank" rel="external">http://a.com/123.jpeg)&quot;。</a><br>图片加速。参考4)。存储用的七牛云。可以用我的这个<a href="https://portal.qiniu.com/signup?code=3law7drkgerf6" title="七牛邀请链接" target="_blank" rel="external">七牛邀请链接</a>注册。注册后直接引用其生成的链接地址即可。批量工具可以用<a href="https://github.com/qiniu/qshell/blob/master/README.md" target="_blank" rel="external">qshell</a>。简单用法如下。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># qshell account ak sk</span></div><div class="line"><span class="comment"># qshell qupload qshell.config</span></div><div class="line"><span class="comment"># cat qshell.config</span></div><div class="line">&#123;</div><div class="line">   <span class="string">"src_dir"</span>            :   <span class="string">"source/cdn"</span>,</div><div class="line">   <span class="string">"bucket"</span>             :   <span class="string">"blog"</span>,</div><div class="line">   <span class="string">"rescan_local"</span>       :   <span class="literal">true</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>先设置ak/sk，然后用quload批量上传。其中src_dir为本地目录， bucket为qiniu上的bucket。</p>
-<h3 id="搜索"><a href="#搜索" class="headerlink" title="搜索"></a>搜索</h3><p>重点了解下其搜索解决方案。<br>local search:</p>
+<h3 id="搜索"><a href="#搜索" class="headerlink" title="搜索"></a>搜索</h3><p>重点了解下其搜索解决方案。<br>local search:<br>原理是通过hexo-generator-search插件在本地生成一个文件，搜索的时候检索这个文件。</p>
 <p>algolia: 先注册(非常简单，New Index即可)，然后按如下方式修改本地配置。<br>version为5.1.0，基本只需要简单改下配置即可，但还是有个bug导致被坑了良久。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># npm install hexo-algolia --save</span></div><div class="line"><span class="comment"># vim _config.yml</span></div><div class="line">algolia:</div><div class="line">  applicationID: <span class="string">'yours'</span></div><div class="line">  apiKey: <span class="string">'yours'</span></div><div class="line">  adminApiKey: <span class="string">'yours'</span></div><div class="line">  indexName: <span class="string">'blog'</span></div><div class="line">  chunkSiz: 5000</div><div class="line"></div><div class="line"><span class="comment"># vim themes/next/_config.yml </span></div><div class="line">algolia_search:</div><div class="line">  <span class="built_in">enable</span>: <span class="literal">true</span></div><div class="line">  hits:</div><div class="line">    per_page: 10</div><div class="line">  labels:</div><div class="line">    input_placeholder: 输入关键词</div><div class="line">    hits_empty: <span class="string">"没有找到与 <span class="variable">$&#123;query&#125;</span> 相关的内容"</span></div><div class="line">    hits_stats: <span class="string">"<span class="variable">$&#123;hits&#125;</span>条相关记录，共耗时 <span class="variable">$&#123;time&#125;</span> ms"</span></div><div class="line"></div><div class="line"><span class="comment"># vim themes/next/layout/_partials/header.swig (note:我这版本已经有了, 不需要改)</span></div><div class="line">          &#123;% elseif config.search || theme.algolia_search.enable %&#125;</div><div class="line">            &lt;a href=<span class="string">"javascript:;"</span> class=<span class="string">"popup-trigger"</span>&gt;</div><div class="line"></div><div class="line"><span class="comment"># vim node_modules/hexo-algolia/lib/command.js</span></div><div class="line">	  var storedPost = _.pick(data, [<span class="string">'title'</span>, <span class="string">'date'</span>, <span class="string">'slug'</span>, <span class="string">'content'</span>, <span class="string">'path'</span>, <span class="string">'excerpt'</span>, <span class="string">'permalink'</span>]);</div><div class="line"><span class="comment"># hexo algolia</span></div></pre></td></tr></table></figure></p>
 <p><img src="http://olan5qt5p.bkt.clouddn.com/algolia.png" alt="效果如下"><br>Swiftype、 微搜索</p>
 <h3 id="打赏"><a href="#打赏" class="headerlink" title="打赏"></a>打赏</h3><p>现在支付宝与微信支付都通过扫码就能实现支付，所以原理就是将你的支付账号用图片加载进来。<br>next现在已经集成了该功能。<br>但需要自行打开相关开关。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># ls themes/next/layout/_macro/reward.swig</span></div><div class="line"><span class="comment"># tail -n 3 themes/next/_config.yml</span></div><div class="line">reward_comment: Enjoy it ? Donate me !  欣赏此文？求鼓励，求支持！</div><div class="line">alipay: http://static.ixirong.com/pic/donate/alipay1.webp</div><div class="line">wechatpay: http://static.ixirong.com/pic/donate/wechat.png</div></pre></td></tr></table></figure></p>
@@ -815,6 +800,130 @@
 
   
   
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
 
   
 
@@ -930,19 +1039,6 @@
   
 
   
-
-  
-  
-  
-  <link rel="stylesheet" href="/lib/algolia-instant-search/instantsearch.min.css">
-
-  
-  
-  <script src="/lib/algolia-instant-search/instantsearch.min.js"></script>
-  
-
-  <script src="/js/src/algolia-search.js?v=5.1.0"></script>
-
 
 
 </body>
