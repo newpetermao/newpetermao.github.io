@@ -1,0 +1,1030 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="anti-spam,spam,网页spam," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="petermao" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="最近对网页spam有兴趣，找了些论文看看，部分还没看完，做个小结吧，后续再慢慢看，慢慢补充了。主要内容都是参考里的论文里的。
+1 spam基础那些误导搜索引擎排名的行为或者从搜索引擎中获得不应有的利益的行为都可以称为spam，具体是否为spam取决于搜索引擎的判断标准。
+简单来说，那些搜索引擎明文允许进行的或者即使搜索引擎不存在但仍存在的“优化”行为可以认为不是spam。比如一些针对特定clien">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网页spam相关论文了解">
+<meta property="og:url" content="http://www.petermao.com/搜索引擎/spam/index.html">
+<meta property="og:site_name" content="petermao">
+<meta property="og:description" content="最近对网页spam有兴趣，找了些论文看看，部分还没看完，做个小结吧，后续再慢慢看，慢慢补充了。主要内容都是参考里的论文里的。
+1 spam基础那些误导搜索引擎排名的行为或者从搜索引擎中获得不应有的利益的行为都可以称为spam，具体是否为spam取决于搜索引擎的判断标准。
+简单来说，那些搜索引擎明文允许进行的或者即使搜索引擎不存在但仍存在的“优化”行为可以认为不是spam。比如一些针对特定clien">
+<meta property="og:updated_time" content="2017-02-14T02:02:51.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网页spam相关论文了解">
+<meta name="twitter:description" content="最近对网页spam有兴趣，找了些论文看看，部分还没看完，做个小结吧，后续再慢慢看，慢慢补充了。主要内容都是参考里的论文里的。
+1 spam基础那些误导搜索引擎排名的行为或者从搜索引擎中获得不应有的利益的行为都可以称为spam，具体是否为spam取决于搜索引擎的判断标准。
+简单来说，那些搜索引擎明文允许进行的或者即使搜索引擎不存在但仍存在的“优化”行为可以认为不是spam。比如一些针对特定clien">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: 'KHGF7KOV3V',
+      apiKey: '6d4bcebc9082d9fbca7e7eacc3bfa281',
+      indexName: 'blog',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"输入关键词","hits_empty":"没有找到与 ${query} 相关的内容","hits_stats":"${hits}条相关记录，共耗时 ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.petermao.com/搜索引擎/spam/"/>
+
+
+
+
+
+  <title> 网页spam相关论文了解 | petermao </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">petermao</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle"></p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://www.petermao.com/搜索引擎/spam/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="John Doe">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="petermao">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="petermao" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                网页spam相关论文了解
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2013-04-14T02:08:04+08:00">
+                2013-04-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              
+                <span>分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/搜索引擎/" itemprop="url" rel="index">
+                    <span itemprop="name">搜索引擎</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/搜索引擎/spam/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="搜索引擎/spam/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/搜索引擎/spam/" class="leancloud_visitors" data-flag-title="网页spam相关论文了解">
+               <span class="post-meta-divider">|</span>
+               
+                 <span>阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近对网页spam有兴趣，找了些论文看看，部分还没看完，做个小结吧，后续再慢慢看，慢慢补充了。<br>主要内容都是参考里的论文里的。</p>
+<p>1 spam基础<br>那些误导搜索引擎排名的行为或者从搜索引擎中获得不应有的利益的行为都可以称为spam，具体是否为spam取决于搜索引擎的判断标准。</p>
+<p>简单来说，那些搜索引擎明文允许进行的或者即使搜索引擎不存在但仍存在的“优化”行为可以认为不是spam。比如一些针对特定client、终端的优化行为不能认为是spam。再比如垃圾网站里贴出的链接，这些链接不应该作为spam，因为这些链接的存在超出了链接目的地的owner的控制，惩罚的应该是垃圾网站本身而不是它指向的链接。<a id="more"></a><br>Anything that would still be done if search engines did not exist, or anything that a search engine has given written permission to do.[2]</p>
+<p>英文spam据估计在15%左右，也可以按语言、domain等进行区分。中文的估计更高。</p>
+<p>产生spam的主要原因是一方面搜索引擎是web的入口，另一方面搜索引擎按page的质量进行排序，用户只关注top10的点击，这些点击带来了相当多的流量，spam的目的就是排在前面，以获得更好的流量。</p>
+<p>spam的主要危害如下：<br>影响用户体验；<br>浪费资源；<br>对好网站不公平；</p>
+<p>2 相关理论模型<br>所有rank相关的模型都涉及了，有些还没来得及细细研究。</p>
+<p>tf-idf = sum(tf(t)*idf(t))     t是查询query与文档term的交集<br>tf:  单词占文章的百分比<br>idf: 单词在所有文档集合中的出现频率百分比的倒数<br>因为web的页面内容web owner可以随意修改，idf是全局的，一般认为spam没法控制，因此spam主要针对tf</p>
+<p>VSM：<br>将文档document与查询query表示成term权重的向量，计算文档与查询的相似度以进行排序&lt;余弦距离是常用的方法&gt;</p>
+<p>pagerank：<br>使用入链信息来打分<br>the importance of a certain page inﬂuences and is being inﬂuenced by the<br>importance of some other pages.</p>
+<p>hits：<br>使用入链与出链信息来打分&lt;分别对应authority与hub得分&gt;<br>According to the circular deﬁnition of HITS, important hub pages are those that point to many important authority pages,while important authority pages are those pointed to by many hubs.<br>spam通过影响出链信息，再影响入链信息。</p>
+<p>browserrank</p>
+<p>query-click</p>
+<p>rank factor：<br>前面的hits、pagerank等也是排序因子，按照[3]，排序因子主要可以分为 on the page factor + off the page factor。<br>具体可以参考[3]，对了解spam的产生原因有帮助。</p>
+<p>评价标准：<br>查准率<br>查全率</p>
+<p>3 分类<br>host/domain name spam:<br>购买过期域名、host堆积&lt;比如一个domain下N多个子host，这些子host的前缀通常是随机的数字或者常用的term&gt;，某些热门关键词的domain&lt;比如由热门词汇组成很长的domain，中间以-等分隔&gt;</p>
+<p>content spam：<br>位置：web页面中的任何一个位置都可以。常用的比如title meta body anchor&lt;针对指向的page&gt; url。<br>策略主要可以分为重复(repeat)与隐藏(hide)。<br>重复:  单个单词重复(Repetition)<br>        大量词汇堆砌(Dumping)<br>        穿插(Weaving)：拷贝一篇好的页面，再在里面穿插些spam词汇或者链接<br>        短语堆积(Phrase stitching):从不同的文章里抽取些词汇再汇总<br>        链接堆积<br>隐藏：背景色与文本色一样的文本/链接<br>         可视化属性设置为false<br>        使用脚本生成文本与链接<br>        通过img的点击指向新链接<br>        size特别短小的文本&lt;用户不可见&gt;</p>
+<p>link spam：<br>位置：出链(outlink)与入链(inlink)<br>出链：克隆好的导航网站/目录(open dir clone)，比如国外的dmoz.org、<a href="http://dir.yahoo.com等，国内的hao123等" target="_blank" rel="external">http://dir.yahoo.com等，国内的hao123等</a><br>入链：链接农场(link farm)：一堆链接的指向复杂度超出了阈值<br>        蜜罐(honey pot)：从别的网站里拷贝的一些好页面，里面包含了一些spam链接；open dir clone也可放入此类。<br>        在一些权威网站里贴垃圾链接(insert link at dir)<br>        在一些open的平台里帖链接，比如blog、wiki、social site、留言板<br>        友情链接交换(link exchange)<br>        购买过期的域名(expired domain)：在购买的废弃域名里张贴大量链接，主要废弃域名的排名会存在一段时间</p>
+<p>关于隐藏(hiding)技术与重定向(redirect)技术：<br>有的论文将隐藏技术与重定向技术作为单独的一类spam技术进行划分。隐藏技术包括基于IP的(搜集特定crawler的IP)与基于HTTP协议头的User Agent(crawler一般会用这个字段标识自身)，另外前面所讲的基于内容的隐藏技术也划分到此类。重定向技术包括http协议重定向、meta重定向与JS重定向。</p>
+<p>除去已划分到内容spam部分的基于内容的隐藏技术，剩下的个人认为没有多少意思。对于基于特定IP/http请求头的隐藏技术，检测方法很容易，无非是多次爬取，基于内容的比较，对于大的商业crawler，这样做貌似不够友好，也浪费资源；至于重定向，比如JS重定向，随着越来越多的好网页在特殊情况下也会使用这种技术，个人认为采用类似于V8的JS引擎，已可以检测出重定向后的URL，就不用考虑此类问题了。</p>
+<p>用户的角度：<br>基于浏览行为的，<br>基于query点击的，</p>
+<p>4 检测<br>content：基于规则的与基于统计的</p>
+<p>link：link farm检测<br>pagerank分值较低的<br>trustrank分值<br>spamrank分值较高的<br>初始种子的选择：人工选择好的、差的，in link 与out link的交集&lt;不同domain的&gt; &gt; 阈值；</p>
+<p>用户行为的事后分析：<br>click-model针对click-log<br>browser-model针对browse-log</p>
+<p>附：参考<br>[1] Monika Henzinger, Rajeev Motwani, and Craig Silverstein. Challenges in web search engines. SIGIR Forum, 36(2), 2002.<br>[2] The Classification of Search Engine Spam  <a href="http://www.silverdisc.co.uk/articles/spam-classification" target="_blank" rel="external">http://www.silverdisc.co.uk/articles/spam-classification</a><br>[3] Web Spam Taxonomy<br>[4] Survey on web spam detection-principles and algorithms<br>[5] Alan Perkins. The classification of search engine spam. <a href="http://www.ebrandmanagement.com/whitepapers/spam-classification/" target="_blank" rel="external">http://www.ebrandmanagement.com/whitepapers/spam-classification/</a>.<br>[6] Zolt´an Gy¨ongyi and Hector Garcia-Molina. Link spam alliances. Technical report, Stanford University, 2005.</p>
+<p>rank factor<br>google ranking factor: <a href="http://www.vaughns-1-pagers.com/internet/google-ranking-factors.htm" target="_blank" rel="external">http://www.vaughns-1-pagers.com/internet/google-ranking-factors.htm</a></p>
+<p>pagerank<br>[1] Lawrence Page, Sergey Brin, Rajeev Motwani, and Terry Winograd. The PageRank citation ranking: Bringing order to the web. Technical report, Stanford University, 1998.<br>[2] Monica Bianchini, Marco Gori, and Franco Scarselli. Inside PageRank. ACM Transactions on Internet Technology, 5(1), 2005.<br>[3] T. Haveliwala. Efficient computation of PageRank. Tech. rep., Stanford University, 1999.<br>[4] T. Haveliwala. Topic-sensitive PageRank. In Proceedings of the Eleventh International Conference on World Wide Web, 2002.<br>[5] S. Kamvar, T. Haveliwala, C. Manning, and G. Golub. Extrapolation methods for accelerating PageRank computations. In Proceedings of the Twelfth International Conference on World Wide Web, 2003.<br>[6] A. Langville and C. Meyer. Deeper inside PageRank. Tech. rep., North Carolina State University, 2003.<br>[7] Jon Kleinberg. Authoritative sources in a hyperlinked environment. Journal of the ACM, 46(5), 1999.</p>
+<p>anti-spam<br>[1] Dennis Fetterly, Mark Manasse, and Marc Najork. Spam, damn spam, and statistics. In Proceedings of the Seventh International Workshop on the Web and Databases (WebDB), 2004.<br>[2] Z. Gy¨ongyi and H. Garcia-Molina. Seed selection in TrustRank. Tech. rep., Stanford University, 2004.<br>[3] Pr0 - Google’s PageRank 0, <a href="http://pr.efactory.de/e-pr0.shtml" target="_blank" rel="external">http://pr.efactory.de/e-pr0.shtml</a>. 2002.<br>[4] Combating Web Spam with TrustRank<br>[5] Detecting Spam Web Pages through Content Analysis<br>[6] Identifying Link Farm Spam Pages<br>[7] Fighting against Web Spam: A Novel Propagation Method based on Click-through Data</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>Enjoy it ? Donate me !  欣赏此文？求鼓励，求支持！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="http://www.petermao.com/zhifu/weixin.png" alt="John Doe WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="http://www.petermao.com/zhifu/alipay.jpg" alt="John Doe Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/anti-spam/" rel="tag"># anti-spam</a>
+          
+            <a href="/tags/spam/" rel="tag"># spam</a>
+          
+            <a href="/tags/网页spam/" rel="tag"># 网页spam</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/redis/121/" rel="next" title="redis源代码分析25–VM（下）">
+                <i class="fa fa-chevron-left"></i> redis源代码分析25–VM（下）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/搜索引擎/sitemap/" rel="prev" title="基于sitemap的链接收集">
+                基于sitemap的链接收集 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="搜索引擎/spam/"
+     data-title="网页spam相关论文了解"
+     data-content=""
+     data-url="http://www.petermao.com/搜索引擎/spam/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="搜索引擎/spam/"
+           data-title="网页spam相关论文了解" data-url="http://www.petermao.com/搜索引擎/spam/">
+      </div>
+
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="John Doe" />
+          <p class="site-author-name" itemprop="name">John Doe</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">33</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2011 - 2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">petermao</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"petermao"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("hoXyjAAO9zHsPml4rV37ttvT-gzGzoHsz", "21fHyiuqT1htJ6Hoh53cm42D");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+
+</body>
+</html>

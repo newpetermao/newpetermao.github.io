@@ -1,0 +1,1115 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="petermao" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="这一节主要介绍下val的加载。
+对于某些命令，比如get somekey，当运行到processCommand时可能key对应的val不在内存中。在运行命令绑定的处理函数之前，redis会提前加载其val。
+在 processCommand中，在vm开启并启用多线程时，会调用 blockClientOnSwappedKeys来加载可能已swap的val，如果blockClientOnSwapped">
+<meta property="og:type" content="article">
+<meta property="og:title" content="redis源代码分析15–val加载机制">
+<meta property="og:url" content="http://www.petermao.com/redis/100/index.html">
+<meta property="og:site_name" content="petermao">
+<meta property="og:description" content="这一节主要介绍下val的加载。
+对于某些命令，比如get somekey，当运行到processCommand时可能key对应的val不在内存中。在运行命令绑定的处理函数之前，redis会提前加载其val。
+在 processCommand中，在vm开启并启用多线程时，会调用 blockClientOnSwappedKeys来加载可能已swap的val，如果blockClientOnSwapped">
+<meta property="og:updated_time" content="2017-02-14T02:02:51.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="redis源代码分析15–val加载机制">
+<meta name="twitter:description" content="这一节主要介绍下val的加载。
+对于某些命令，比如get somekey，当运行到processCommand时可能key对应的val不在内存中。在运行命令绑定的处理函数之前，redis会提前加载其val。
+在 processCommand中，在vm开启并启用多线程时，会调用 blockClientOnSwappedKeys来加载可能已swap的val，如果blockClientOnSwapped">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: 'KHGF7KOV3V',
+      apiKey: '6d4bcebc9082d9fbca7e7eacc3bfa281',
+      indexName: 'blog',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"输入关键词","hits_empty":"没有找到与 ${query} 相关的内容","hits_stats":"${hits}条相关记录，共耗时 ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.petermao.com/redis/100/"/>
+
+
+
+
+
+  <title> redis源代码分析15–val加载机制 | petermao </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">petermao</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle"></p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://www.petermao.com/redis/100/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="John Doe">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="petermao">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="petermao" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                redis源代码分析15–val加载机制
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2011-05-01T04:30:43+08:00">
+                2011-05-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              
+                <span>分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/redis/" itemprop="url" rel="index">
+                    <span itemprop="name">redis</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/redis/100/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="redis/100/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/redis/100/" class="leancloud_visitors" data-flag-title="redis源代码分析15–val加载机制">
+               <span class="post-meta-divider">|</span>
+               
+                 <span>阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这一节主要介绍下val的加载。</p>
+<p>对于某些命令，比如get somekey，当运行到processCommand时可能key对应的val不在内存中。在运行命令绑定的处理函数之前，redis会提前加载其val。</p>
+<p>在 processCommand中，在vm开启并启用多线程时，会调用 blockClientOnSwappedKeys来加载可能已swap的val，如果blockClientOnSwappedKeys返回0，说明有 swap的val没被加载，则返回不调用call了（此时client会设置 REDIS_IO_WAIT标志，并已放到等待列表中）。代码如下：<a id="more"></a></p>
+<p><pre></pre></p>
+<h2 id="static-int-processCommand-redisClient-c"><a href="#static-int-processCommand-redisClient-c" class="headerlink" title="static int processCommand(redisClient *c) {"></a>static int processCommand(redisClient *c) {</h2><pre><code>if (server.vm_enabled &amp;&amp; server.vm_max_threads &gt; 0 &amp;&amp;
+       blockClientOnSwappedKeys(c,cmd)) return 1;
+   call(c,cmd);
+ ---
+</code></pre><p>}<br><br>在blockClientOnSwappedKeys函数中，如果命令设置了预加载函数，比如zunionstore和zinterstore就设置了预加载函数 zunionInterBlockClientOnSwappedKeys，则使用设置的预加载函数加载swap的val，否则使用 waitForMultipleSwappedKeys加载swap的val，不过查看 zunionInterBlockClientOnSwappedKeys和waitForMultipleSwappedKeys的实现就可以发现， 这些函数最终都调用waitForSwappedKey。在预加载函数返回后，若client的io_keys链表非空（io_keys是该client 不在内存中的val的链表），则设置client的REDIS_IO_WAIT标志，取消client的read 事件（在这之前，client已放到对应key的阻塞队列中了）。</p>
+<p><pre><br>static int blockClientOnSwappedKeys(redisClient <em>c, struct redisCommand </em>cmd) {<br>    if (cmd-&gt;vm_preload_proc != NULL) {<br>        cmd-&gt;vm_preload_proc(c,cmd,c-&gt;argc,c-&gt;argv);<br>    } else {<br>        waitForMultipleSwappedKeys(c,cmd,c-&gt;argc,c-&gt;argv);<br>    }</pre></p>
+<pre><code>/* If the client was blocked for at least one key, mark it as blocked. */
+if (listLength(c-&gt;io_keys)) {
+    c-&gt;flags |= REDIS_IO_WAIT;
+    aeDeleteFileEvent(server.el,c-&gt;fd,AE_READABLE);
+    server.vm_blocked_clients++;
+    return 1;
+} else {
+    return 0;
+}
+</code></pre><p>}<br><br>我们看看waitForMultipleSwappedKeys的实现。waitForMultipleSwappedKeys会根据命令字表中设置的预加载参数，加载需要加载的val。</p>
+<p><pre><br>static void waitForMultipleSwappedKeys(redisClient <em>c, struct redisCommand </em>cmd, int argc, robj **argv) {<br>    int j, last;<br>    if (cmd-&gt;vm_firstkey == 0) return;<br>    last = cmd-&gt;vm_lastkey;<br>    if (last &lt; 0) last = argc+last;<br>    for (j = cmd-&gt;vm_firstkey; j &lt;= last; j += cmd-&gt;vm_keystep) {<br>        redisAssert(j &lt; argc);<br>        waitForSwappedKey(c,argv[j]);<br>    }<br>}<br></pre><br>比如我们查看get命令字的设置。后面的1,1,1就是表示加载的val在argv中的位置，每个get命令最多需要预加载1个val。</p>
+<p><pre><br>{“get”,getCommand,2,REDIS_CMD_INLINE,NULL,1,1,1},<br></pre><br>waitForSwappedKey 涉及到vm的多线程，建议先粗略理解下，并在阅读vm章节后再返回此处阅读。该函数所做的主要工作就是将(c, key) 加到c-&gt;db-&gt;io_keys中，而db其实指向全局server的db，然后创建一个job，插入到工作线程中，让工作线程完成val 的加载。</p>
+<p><pre><br>static int waitForSwappedKey(redisClient <em>c, robj </em>key) {<br>    struct dictEntry <em>de;<br>    robj </em>o;<br>    list *l;</pre></p>
+<pre><code>/* If the key does not exist or is already in RAM we don&apos;t need to
+ * block the client at all. */
+de = dictFind(c-&gt;db-&gt;dict,key);
+if (de == NULL) return 0;
+o = dictGetEntryKey(de);
+if (o-&gt;storage == REDIS_VM_MEMORY) {
+    return 0;
+} else if (o-&gt;storage == REDIS_VM_SWAPPING) {
+    /* We were swapping the key, undo it! */
+    vmCancelThreadedIOJob(o);
+    return 0;
+}
+
+/* OK: the key is either swapped, or being loaded just now. */
+
+/* Add the key to the list of keys this client is waiting for.
+ * This maps clients to keys they are waiting for. */
+listAddNodeTail(c-&gt;io_keys,key);
+incrRefCount(key);
+
+/* Add the client to the swapped keys =&gt; clients waiting map. */
+de = dictFind(c-&gt;db-&gt;io_keys,key);
+if (de == NULL) {
+    int retval;
+
+    /* For every key we take a list of clients blocked for it */
+    l = listCreate();
+    retval = dictAdd(c-&gt;db-&gt;io_keys,key,l);
+    incrRefCount(key);
+    assert(retval == DICT_OK);
+} else {
+    l = dictGetEntryVal(de);
+}
+listAddNodeTail(l,c);
+
+/* Are we already loading the key from disk? If not create a job */
+if (o-&gt;storage == REDIS_VM_SWAPPED) {
+    iojob *j;
+
+    o-&gt;storage = REDIS_VM_LOADING;
+    j = zmalloc(sizeof(*j));
+    j-&gt;type = REDIS_IOJOB_LOAD;
+    j-&gt;db = c-&gt;db;
+    j-&gt;key = o;
+    j-&gt;key-&gt;vtype = o-&gt;vtype;
+    j-&gt;page = o-&gt;vm.page;
+    j-&gt;val = NULL;
+    j-&gt;canceled = 0;
+    j-&gt;thread = (pthread_t) -1;
+    lockThreadedIO();
+    queueIOJob(j);
+    unlockThreadedIO();
+}
+return 1;
+</code></pre><p>}<br><br>插入工作线程的job在运行完后，会调用 vmThreadedIOCompletedJob，在该函数中会调用handleClientsBlockedOnSwappedKey处理阻塞的 client，而handleClientsBlockedOnSwappedKey所做的主要工作就是将所有val已加载的client放到 server.io_ready_clients中，此时client已ready好了，但还没有加入read事件循环（因为之前因为等待val已删除其 read事件）。</p>
+<p><pre><br>static void handleClientsBlockedOnSwappedKey(redisDb <em>db, robj </em>key) {<br>    struct dictEntry <em>de;<br>    list </em>l;<br>    listNode *ln;<br>    int len;</pre></p>
+<pre><code>de = dictFind(db-&gt;io_keys,key);
+if (!de) return;
+
+l = dictGetEntryVal(de);
+len = listLength(l);
+/* Note: we can&apos;t use something like while(listLength(l)) as the list
+ * can be freed by the calling function when we remove the last element. */
+while (len--) {
+    ln = listFirst(l);
+    redisClient *c = ln-&gt;value;
+
+    if (dontWaitForSwappedKey(c,key)) {
+        /* Put the client in the list of clients ready to go as we
+         * loaded all the keys about it. */
+        listAddNodeTail(server.io_ready_clients,c);
+    }
+}
+</code></pre><p>}<br><br>最后还剩下一个问题，那就是处于server.io_ready_clients的clint会在什么时候增加read事件，从而继续让其接收客户端的输入了。这个工作在beforeSleep函数中完成（前面的事件循环中有详细介绍）。beforeSleep会为server.io_ready_clients中的client增加read事件，调用processInputBuffer处理其输入。</p>
+<p>另外注意，如果client需要的val在检查时都在内存中，但当执行命令处理函数时，该val被swap出去了，则只能使用vmLoadObject直接加载了（阻塞方式）。对此种情况，redis的解释是In practical terms this should onlyhappen with SORT BY command or if there is a bug in this function（参考blockClientOnSwappedKeys前的注释）。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>Enjoy it ? Donate me !  欣赏此文？求鼓励，求支持！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="http://www.petermao.com/zhifu/weixin.png" alt="John Doe WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="http://www.petermao.com/zhifu/alipay.jpg" alt="John Doe Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/redis/98/" rel="next" title="redis源代码分析14–命令处理的一般过程">
+                <i class="fa fa-chevron-left"></i> redis源代码分析14–命令处理的一般过程
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/redis/102/" rel="prev" title="redis源代码分析16–阻塞式命令">
+                redis源代码分析16–阻塞式命令 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="redis/100/"
+     data-title="redis源代码分析15–val加载机制"
+     data-content=""
+     data-url="http://www.petermao.com/redis/100/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="redis/100/"
+           data-title="redis源代码分析15–val加载机制" data-url="http://www.petermao.com/redis/100/">
+      </div>
+
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="John Doe" />
+          <p class="site-author-name" itemprop="name">John Doe</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">33</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#static-int-processCommand-redisClient-c"><span class="nav-number">1.</span> <span class="nav-text">static int processCommand(redisClient *c) {</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2011 - 2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">petermao</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"petermao"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("hoXyjAAO9zHsPml4rV37ttvT-gzGzoHsz", "21fHyiuqT1htJ6Hoh53cm42D");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+
+</body>
+</html>

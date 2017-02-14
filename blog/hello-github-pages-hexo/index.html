@@ -90,13 +90,13 @@
 相比于wordpress之类的自己买主机建站，对于我个人来讲，采用github+hexo类的静态化方案有如下几个好处：a) 免费，不限流量b) git版本管理，方便追查修改记录c) 把精力用来写文章(像ci代码一样方便)，不用再做网管了d) 学习下markdown之类的写作语法e) 了解下无后端的前端解决方案">
 <meta property="og:type" content="article">
 <meta property="og:title" content="blog从wordpress迁移到github pages&hexo">
-<meta property="og:url" content="http://yoursite.com/blog/hello-github-pages-hexo/index.html">
+<meta property="og:url" content="http://www.petermao.com/blog/hello-github-pages-hexo/index.html">
 <meta property="og:site_name" content="petermao">
 <meta property="og:description" content="写在开头将博客从wordpress系统迁移到github pages+hexo了。
 相比于wordpress之类的自己买主机建站，对于我个人来讲，采用github+hexo类的静态化方案有如下几个好处：a) 免费，不限流量b) git版本管理，方便追查修改记录c) 把精力用来写文章(像ci代码一样方便)，不用再做网管了d) 学习下markdown之类的写作语法e) 了解下无后端的前端解决方案">
 <meta property="og:image" content="http://olan5qt5p.bkt.clouddn.com/algolia.png">
 <meta property="og:image" content="http://olan5qt5p.bkt.clouddn.com/shaoyang.jpeg">
-<meta property="og:updated_time" content="2017-02-13T17:47:22.000Z">
+<meta property="og:updated_time" content="2017-02-14T02:15:23.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="blog从wordpress迁移到github pages&hexo">
 <meta name="twitter:description" content="写在开头将博客从wordpress系统迁移到github pages+hexo了。
@@ -129,7 +129,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/blog/hello-github-pages-hexo/"/>
+  <link rel="canonical" href="http://www.petermao.com/blog/hello-github-pages-hexo/"/>
 
 
 
@@ -291,7 +291,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/blog/hello-github-pages-hexo/">
+  <link itemprop="mainEntityOfPage" href="http://www.petermao.com/blog/hello-github-pages-hexo/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="John Doe">
@@ -411,12 +411,15 @@
 <h3 id="hexo日常使用命令"><a href="#hexo日常使用命令" class="headerlink" title="hexo日常使用命令"></a>hexo日常使用命令</h3><h3 id="url格式"><a href="#url格式" class="headerlink" title="url格式"></a>url格式</h3><p>hexo的默认格式如下：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">permalink: :year/:month/:day/:title/</div></pre></td></tr></table></figure></p>
 <p>按照我以前wordpress的格式进行了调整：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">permalink: :category/:title/</div></pre></td></tr></table></figure></p>
 <h3 id="文章阅读数统计"><a href="#文章阅读数统计" class="headerlink" title="文章阅读数统计"></a>文章阅读数统计</h3><p>参考3)。存储用了leanloud。需要先注册。<br>如果用的next主题，很简单。在leancloud注册后，将_config.xml中的开关打开(搜索leancloud)即可。<br>如果其他主题，需要参考3)所示的链接加入脚本代码。</p>
-<h3 id="图片"><a href="#图片" class="headerlink" title="图片"></a>图片</h3><p>markdown的图片引入语法为:”![title](<a href="http://a.com/123.jpeg)&quot;。" target="_blank" rel="external">http://a.com/123.jpeg)&quot;。</a><br>图片加速。参考4)。存储用的七牛云。可以用我的这个<a href="https://portal.qiniu.com/signup?code=3law7drkgerf6" title="七牛邀请链接" target="_blank" rel="external">七牛邀请链接</a>注册。注册后直接引用其生成的链接地址即可。批量工具可以用<a href="https://github.com/qiniu/qshell/blob/master/README.md" target="_blank" rel="external">qshell</a>。简单用法如下。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># qshell account ak sk</span></div><div class="line"><span class="comment"># qshell qupload qshell.config</span></div><div class="line"><span class="comment"># cat qshell.config</span></div><div class="line">&#123;</div><div class="line">   <span class="string">"src_dir"</span>            :   <span class="string">"source/cdn"</span>,</div><div class="line">   <span class="string">"bucket"</span>             :   <span class="string">"blog"</span>,</div><div class="line">   <span class="string">"rescan_local"</span>       :   <span class="literal">true</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="图片"><a href="#图片" class="headerlink" title="图片"></a>图片</h3><p>markdown的图片引入语法为:”![title](<a href="http://a.com/123.jpeg)&quot;。" target="_blank" rel="external">http://a.com/123.jpeg)&quot;。</a><br>图片加速。参考4)。存储用的七牛云。可以用我的这个<a href="https://portal.qiniu.com/signup?code=3law7drkgerf6" title="七牛邀请链接" target="_blank" rel="external">七牛邀请链接</a>注册。注册后直接引用其生成的链接地址即可。批量工具可以用<a href="https://github.com/qiniu/qshell/blob/master/README.md" target="_blank" rel="external">qshell</a>。简单用法如下。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">$ qshell account ak sk</div><div class="line">$ qshell qupload qshell.config</div><div class="line">$ cat qshell.config</div><div class="line">&#123;</div><div class="line">   <span class="string">"src_dir"</span>            :   <span class="string">"source/cdn"</span>,</div><div class="line">   <span class="string">"bucket"</span>             :   <span class="string">"blog"</span>,</div><div class="line">   <span class="string">"rescan_local"</span>       :   <span class="literal">true</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>先设置ak/sk，然后用quload批量上传。其中src_dir为本地目录， bucket为qiniu上的bucket。</p>
-<h3 id="搜索"><a href="#搜索" class="headerlink" title="搜索"></a>搜索</h3><p>重点了解下其搜索解决方案。<br>local search:<br>原理是通过hexo-generator-search插件在本地生成一个文件，搜索的时候检索这个文件。</p>
-<p>algolia: 先注册(非常简单，New Index即可)，然后按如下方式修改本地配置。<br>version为5.1.0，基本只需要简单改下配置即可，但还是有个bug导致被坑了良久。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># npm install hexo-algolia --save</span></div><div class="line"><span class="comment"># vim _config.yml</span></div><div class="line">algolia:</div><div class="line">  applicationID: <span class="string">'yours'</span></div><div class="line">  apiKey: <span class="string">'yours'</span></div><div class="line">  adminApiKey: <span class="string">'yours'</span></div><div class="line">  indexName: <span class="string">'blog'</span></div><div class="line">  chunkSiz: 5000</div><div class="line"></div><div class="line"><span class="comment"># vim themes/next/_config.yml </span></div><div class="line">algolia_search:</div><div class="line">  <span class="built_in">enable</span>: <span class="literal">true</span></div><div class="line">  hits:</div><div class="line">    per_page: 10</div><div class="line">  labels:</div><div class="line">    input_placeholder: 输入关键词</div><div class="line">    hits_empty: <span class="string">"没有找到与 <span class="variable">$&#123;query&#125;</span> 相关的内容"</span></div><div class="line">    hits_stats: <span class="string">"<span class="variable">$&#123;hits&#125;</span>条相关记录，共耗时 <span class="variable">$&#123;time&#125;</span> ms"</span></div><div class="line"></div><div class="line"><span class="comment"># vim themes/next/layout/_partials/header.swig (note:我这版本已经有了, 不需要改)</span></div><div class="line">          &#123;% elseif config.search || theme.algolia_search.enable %&#125;</div><div class="line">            &lt;a href=<span class="string">"javascript:;"</span> class=<span class="string">"popup-trigger"</span>&gt;</div><div class="line"></div><div class="line"><span class="comment"># vim node_modules/hexo-algolia/lib/command.js</span></div><div class="line">	  var storedPost = _.pick(data, [<span class="string">'title'</span>, <span class="string">'date'</span>, <span class="string">'slug'</span>, <span class="string">'content'</span>, <span class="string">'path'</span>, <span class="string">'excerpt'</span>, <span class="string">'permalink'</span>]);</div><div class="line"><span class="comment"># hexo algolia</span></div></pre></td></tr></table></figure></p>
+<h3 id="wordpress迁移"><a href="#wordpress迁移" class="headerlink" title="wordpress迁移"></a>wordpress迁移</h3><p>如果顺利的话，似乎几个步骤就搞定了。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ npm install hexo-migrator-wordpress --save</div><div class="line">$ --&gt; WordPress 仪表盘中导出数据(“Tools” → “Export” → “WordPress”)</div><div class="line">$ hexo migrate wordpress &lt;<span class="built_in">source</span>&gt;</div></pre></td></tr></table></figure></p>
+<p>非常遗憾。我的blog几乎有大半导不成功。只能手工搞了。而且原来的blog停掉了，只能先手工搭建一个本地的wordpress人工review了。<br>另外像评论、阅读数等等统计也就没有了，只能人工迁移了。</p>
+<h3 id="搜索"><a href="#搜索" class="headerlink" title="搜索"></a>搜索</h3><p>重点了解下其搜索解决方案。<br>local search:<br>原理是通过hexo-generator-search插件在本地生成一个文件，搜索的时候检索这个文件。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">$ npm install hexo-generator-search --save</div><div class="line">$ npm install hexo-generator-searchdb --save</div><div class="line">$ vim themes/next/_config.yml</div><div class="line">search:</div><div class="line">  path: search.xml</div><div class="line">  field: post</div><div class="line">  format: html</div><div class="line">  <span class="built_in">limit</span>: 10000</div></pre></td></tr></table></figure></p>
+<p>algolia: 先注册(非常简单，New Index即可)，然后按如下方式修改本地配置。<br>version为5.1.0，基本只需要简单改下配置即可，但还是有个bug导致被坑了良久。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">$ npm install hexo-algolia --save</div><div class="line">$ vim _config.yml</div><div class="line">algolia:</div><div class="line">  applicationID: <span class="string">'yours'</span></div><div class="line">  apiKey: <span class="string">'yours'</span></div><div class="line">  adminApiKey: <span class="string">'yours'</span></div><div class="line">  indexName: <span class="string">'blog'</span></div><div class="line">  chunkSiz: 5000</div><div class="line"></div><div class="line">$ vim themes/next/_config.yml </div><div class="line">algolia_search:</div><div class="line">  <span class="built_in">enable</span>: <span class="literal">true</span></div><div class="line">  hits:</div><div class="line">    per_page: 10</div><div class="line">  labels:</div><div class="line">    input_placeholder: 输入关键词</div><div class="line">    hits_empty: <span class="string">"没有找到与 <span class="variable">$&#123;query&#125;</span> 相关的内容"</span></div><div class="line">    hits_stats: <span class="string">"<span class="variable">$&#123;hits&#125;</span>条相关记录，共耗时 <span class="variable">$&#123;time&#125;</span> ms"</span></div><div class="line"></div><div class="line">$ vim themes/next/layout/_partials/header.swig (note:我这版本已经有了, 不需要改)</div><div class="line">          &#123;% elseif config.search || theme.algolia_search.enable %&#125;</div><div class="line">            &lt;a href=<span class="string">"javascript:;"</span> class=<span class="string">"popup-trigger"</span>&gt;</div><div class="line"></div><div class="line">$ vim node_modules/hexo-algolia/lib/command.js</div><div class="line">	  var storedPost = _.pick(data, [<span class="string">'title'</span>, <span class="string">'date'</span>, <span class="string">'slug'</span>, <span class="string">'content'</span>, <span class="string">'path'</span>, <span class="string">'excerpt'</span>, <span class="string">'permalink'</span>]);</div><div class="line">$ hexo algolia</div></pre></td></tr></table></figure></p>
 <p><img src="http://olan5qt5p.bkt.clouddn.com/algolia.png" alt="效果如下"><br>Swiftype、 微搜索</p>
-<h3 id="打赏"><a href="#打赏" class="headerlink" title="打赏"></a>打赏</h3><p>现在支付宝与微信支付都通过扫码就能实现支付，所以原理就是将你的支付账号用图片加载进来。<br>next现在已经集成了该功能。<br>但需要自行打开相关开关。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># ls themes/next/layout/_macro/reward.swig</span></div><div class="line"><span class="comment"># tail -n 3 themes/next/_config.yml</span></div><div class="line">reward_comment: Enjoy it ? Donate me !  欣赏此文？求鼓励，求支持！</div><div class="line">alipay: http://static.ixirong.com/pic/donate/alipay1.webp</div><div class="line">wechatpay: http://static.ixirong.com/pic/donate/wechat.png</div></pre></td></tr></table></figure></p>
+<h3 id="打赏"><a href="#打赏" class="headerlink" title="打赏"></a>打赏</h3><p>现在支付宝与微信支付都通过扫码就能实现支付，所以原理就是将你的支付账号用图片加载进来。<br>next现在已经集成了该功能。<br>但需要自行打开相关开关。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ ls themes/next/layout/_macro/reward.swig</div><div class="line">$ tail -n 3 themes/next/_config.yml</div><div class="line">reward_comment: Enjoy it ? Donate me !  欣赏此文？求鼓励，求支持！</div><div class="line">alipay: http://static.ixirong.com/pic/donate/alipay1.webp</div><div class="line">wechatpay: http://static.ixirong.com/pic/donate/wechat.png</div></pre></td></tr></table></figure></p>
+<h3 id="TODO"><a href="#TODO" class="headerlink" title="TODO"></a>TODO</h3><p>整理wordpres的blog时的一大发现就是草稿里累计了好多，需要加把劲完善完善正式发布出来。<br>```</p>
 <p><img src="http://olan5qt5p.bkt.clouddn.com/shaoyang.jpeg" alt="邵阳崀山"></p>
 <h2 id="致谢与参考"><a href="#致谢与参考" class="headerlink" title="致谢与参考"></a>致谢与参考</h2><p>1 <a href="http://www.ruanyifeng.com/blog/2012/08/blogging_with_jekyll.html" target="_blank" rel="external">搭建一个免费的，无限流量的Blog—-github Pages和Jekyll入门</a></p>
 <p>2 <a href="http://www.ezlippi.com//blog/2016/02/jekyll-to-hexo.html" target="_blank" rel="external">Jekyll迁移到Hexo搭建个人博客</a></p>
@@ -508,7 +511,7 @@
         <div class="ds-share flat" data-thread-key="blog/hello-github-pages-hexo/"
      data-title="blog从wordpress迁移到github pages&hexo"
      data-content=""
-     data-url="http://yoursite.com/blog/hello-github-pages-hexo/">
+     data-url="http://www.petermao.com/blog/hello-github-pages-hexo/">
   <div class="ds-share-inline">
     <ul  class="ds-share-icons-16">
 
@@ -536,7 +539,7 @@
   <div class="comments" id="comments">
     
       <div class="ds-thread" data-thread-key="blog/hello-github-pages-hexo/"
-           data-title="blog从wordpress迁移到github pages&hexo" data-url="http://yoursite.com/blog/hello-github-pages-hexo/">
+           data-title="blog从wordpress迁移到github pages&hexo" data-url="http://www.petermao.com/blog/hello-github-pages-hexo/">
       </div>
 
     
@@ -584,7 +587,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-count">33</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -593,7 +596,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-count">8</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -602,7 +605,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-count">15</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -644,7 +647,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#写在开头"><span class="nav-number">1.</span> <span class="nav-text">写在开头</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实践之路"><span class="nav-number">2.</span> <span class="nav-text">实践之路</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#入门学习"><span class="nav-number">2.1.</span> <span class="nav-text">入门学习</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hexo日常使用命令"><span class="nav-number">2.2.</span> <span class="nav-text">hexo日常使用命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#url格式"><span class="nav-number">2.3.</span> <span class="nav-text">url格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文章阅读数统计"><span class="nav-number">2.4.</span> <span class="nav-text">文章阅读数统计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#图片"><span class="nav-number">2.5.</span> <span class="nav-text">图片</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#搜索"><span class="nav-number">2.6.</span> <span class="nav-text">搜索</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#打赏"><span class="nav-number">2.7.</span> <span class="nav-text">打赏</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#致谢与参考"><span class="nav-number">3.</span> <span class="nav-text">致谢与参考</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#写在开头"><span class="nav-number">1.</span> <span class="nav-text">写在开头</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实践之路"><span class="nav-number">2.</span> <span class="nav-text">实践之路</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#入门学习"><span class="nav-number">2.1.</span> <span class="nav-text">入门学习</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hexo日常使用命令"><span class="nav-number">2.2.</span> <span class="nav-text">hexo日常使用命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#url格式"><span class="nav-number">2.3.</span> <span class="nav-text">url格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文章阅读数统计"><span class="nav-number">2.4.</span> <span class="nav-text">文章阅读数统计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#图片"><span class="nav-number">2.5.</span> <span class="nav-text">图片</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#wordpress迁移"><span class="nav-number">2.6.</span> <span class="nav-text">wordpress迁移</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#搜索"><span class="nav-number">2.7.</span> <span class="nav-text">搜索</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#打赏"><span class="nav-number">2.8.</span> <span class="nav-text">打赏</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TODO"><span class="nav-number">2.9.</span> <span class="nav-text">TODO</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#致谢与参考"><span class="nav-number">3.</span> <span class="nav-text">致谢与参考</span></a></li></ol></div>
             
 
           </div>
