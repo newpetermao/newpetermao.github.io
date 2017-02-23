@@ -63,8 +63,6 @@
       <category term="博客管理" scheme="http://www.petermao.com/categories/%E5%8D%9A%E5%AE%A2%E7%AE%A1%E7%90%86/"/>
     
     
-      <category term="wordpress" scheme="http://www.petermao.com/tags/wordpress/"/>
-    
       <category term="blog" scheme="http://www.petermao.com/tags/blog/"/>
     
       <category term="hexo" scheme="http://www.petermao.com/tags/hexo/"/>
@@ -72,6 +70,8 @@
       <category term="next" scheme="http://www.petermao.com/tags/next/"/>
     
       <category term="github pages" scheme="http://www.petermao.com/tags/github-pages/"/>
+    
+      <category term="wordpress" scheme="http://www.petermao.com/tags/wordpress/"/>
     
   </entry>
   
