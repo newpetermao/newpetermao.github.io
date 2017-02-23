@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.petermao.com/"/>
-  <updated>2017-02-14T02:15:23.000Z</updated>
+  <updated>2017-02-21T05:52:34.000Z</updated>
   <id>http://www.petermao.com/</id>
   
   <author>
@@ -17,10 +17,10 @@
   
   <entry>
     <title>blog从wordpress迁移到github pages&amp;hexo</title>
-    <link href="http://www.petermao.com/blog/hello-github-pages-hexo/"/>
-    <id>http://www.petermao.com/blog/hello-github-pages-hexo/</id>
+    <link href="http://www.petermao.com/wordpress-to-hexo/"/>
+    <id>http://www.petermao.com/wordpress-to-hexo/</id>
     <published>2017-01-16T09:28:02.000Z</published>
-    <updated>2017-02-14T02:15:23.000Z</updated>
+    <updated>2017-02-21T05:52:34.000Z</updated>
     
     <content type="html"><![CDATA[<h2 id="写在开头"><a href="#写在开头" class="headerlink" title="写在开头"></a>写在开头</h2><p>将博客从wordpress系统迁移到github pages+hexo了。</p>
 <p>相比于wordpress之类的自己买主机建站，对于我个人来讲，采用github+hexo类的静态化方案有如下几个好处：<br>a) 免费，不限流量<br>b) git版本管理，方便追查修改记录<br>c) 把精力用来写文章(像ci代码一样方便)，不用再做网管了<br>d) 学习下markdown之类的写作语法<br>e) 了解下无后端的前端解决方案<br><a id="more"></a></p>
@@ -28,12 +28,15 @@
 <p>严格来讲，对于一般的博客，blog数量有限，c不是问题。a与b换个角度也是优点。</p>
 <h2 id="实践之路"><a href="#实践之路" class="headerlink" title="实践之路"></a>实践之路</h2><h3 id="入门学习"><a href="#入门学习" class="headerlink" title="入门学习"></a>入门学习</h3><p>参考1)。一开始用的Jekyll。后来迁移到了hexo。<br>githubpages+hexo迁移。参考2)。相比于Jekyll，hexo似乎更简单。</p>
 <h3 id="hexo日常使用命令"><a href="#hexo日常使用命令" class="headerlink" title="hexo日常使用命令"></a>hexo日常使用命令</h3><h3 id="url格式"><a href="#url格式" class="headerlink" title="url格式"></a>url格式</h3><p>hexo的默认格式如下：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">permalink: :year/:month/:day/:title/</div></pre></td></tr></table></figure></p>
-<p>按照我以前wordpress的格式进行了调整：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">permalink: :category/:title/</div></pre></td></tr></table></figure></p>
-<h3 id="文章阅读数统计"><a href="#文章阅读数统计" class="headerlink" title="文章阅读数统计"></a>文章阅读数统计</h3><p>参考3)。存储用了leanloud。需要先注册。<br>如果用的next主题，很简单。在leancloud注册后，将_config.xml中的开关打开(搜索leancloud)即可。<br>如果其他主题，需要参考3)所示的链接加入脚本代码。</p>
+<p>按照我以前wordpress的格式进行了调整：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">permalink: :title/</div></pre></td></tr></table></figure></p>
+<h3 id="文章阅读数统计"><a href="#文章阅读数统计" class="headerlink" title="文章阅读数统计"></a>文章阅读数统计</h3><p>参考3)。存储用了leanloud。需要先注册。<br>如果用的next主题，很简单。在leancloud注册后，将_config.xml中的开关打开(搜索leancloud)即可。<br>如果其他主题，需要参考3)所示的链接加入脚本代码。<br>对脚本代码进行了一些调整：将访问数存储至leancloud但不显示，对存储至leancloud的字段也进行了些许修改。<br>但原博客的pv就没办法再保留了。</p>
 <h3 id="图片"><a href="#图片" class="headerlink" title="图片"></a>图片</h3><p>markdown的图片引入语法为:”![title](<a href="http://a.com/123.jpeg)&quot;。" target="_blank" rel="external">http://a.com/123.jpeg)&quot;。</a><br>图片加速。参考4)。存储用的七牛云。可以用我的这个<a href="https://portal.qiniu.com/signup?code=3law7drkgerf6" title="七牛邀请链接" target="_blank" rel="external">七牛邀请链接</a>注册。注册后直接引用其生成的链接地址即可。批量工具可以用<a href="https://github.com/qiniu/qshell/blob/master/README.md" target="_blank" rel="external">qshell</a>。简单用法如下。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">$ qshell account ak sk</div><div class="line">$ qshell qupload qshell.config</div><div class="line">$ cat qshell.config</div><div class="line">&#123;</div><div class="line">   <span class="string">"src_dir"</span>            :   <span class="string">"source/cdn"</span>,</div><div class="line">   <span class="string">"bucket"</span>             :   <span class="string">"blog"</span>,</div><div class="line">   <span class="string">"rescan_local"</span>       :   <span class="literal">true</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>先设置ak/sk，然后用quload批量上传。其中src_dir为本地目录， bucket为qiniu上的bucket。</p>
 <h3 id="wordpress迁移"><a href="#wordpress迁移" class="headerlink" title="wordpress迁移"></a>wordpress迁移</h3><p>如果顺利的话，似乎几个步骤就搞定了。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ npm install hexo-migrator-wordpress --save</div><div class="line">$ --&gt; WordPress 仪表盘中导出数据(“Tools” → “Export” → “WordPress”)</div><div class="line">$ hexo migrate wordpress &lt;<span class="built_in">source</span>&gt;</div></pre></td></tr></table></figure></p>
-<p>非常遗憾。我的blog几乎有大半导不成功。只能手工搞了。而且原来的blog停掉了，只能先手工搭建一个本地的wordpress人工review了。<br>另外像评论、阅读数等等统计也就没有了，只能人工迁移了。</p>
+<p>非常遗憾。我的blog几乎有大半导不成功。只能手工搞了。<br>另外像评论、阅读数等等统计也就没有了，只能人工迁移了。</p>
+<p>重定向与首页不显示部分链接：<br>不想采用原来wordpress的链接展示格式，但也不希望原来的链接变成死链。因此需要重定向原来的链接。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">cat <span class="built_in">source</span>/leveldb/leveldb-8-snapshot.html</div><div class="line">&lt;meta http-equiv=<span class="string">"refresh"</span> content=<span class="string">"0; url=http://www.petermao.com/leveldb-8-snapshot/"</span>&gt;</div><div class="line">&lt;link rel=<span class="string">"canonical"</span> href=<span class="string">"http://www.petermao.com/leveldb-8-snapshot/"</span> /&gt;</div></pre></td></tr></table></figure></p>
+<p>原来的链接访问”/leveldb/leveldb-8-snapshot.html”会自动重定向到”/leveldb-8-snapshot/“<br>如果该类转化较多，写个脚本自动化之。</p>
+<p>如果不希望指定的post在首页显示，则需要修改index.swig。然后每篇blog添加对应的标签值。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># vim themes/next/layout/index.swig</span></div><div class="line">      &#123;% <span class="keyword">if</span> post.visible !== <span class="string">'hide'</span> %&#125;</div><div class="line">      &#123;&#123; post_template.render(post, <span class="literal">true</span>) &#125;&#125;</div><div class="line">      &#123;% endif %&#125;</div></pre></td></tr></table></figure></p>
 <h3 id="搜索"><a href="#搜索" class="headerlink" title="搜索"></a>搜索</h3><p>重点了解下其搜索解决方案。<br>local search:<br>原理是通过hexo-generator-search插件在本地生成一个文件，搜索的时候检索这个文件。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">$ npm install hexo-generator-search --save</div><div class="line">$ npm install hexo-generator-searchdb --save</div><div class="line">$ vim themes/next/_config.yml</div><div class="line">search:</div><div class="line">  path: search.xml</div><div class="line">  field: post</div><div class="line">  format: html</div><div class="line">  <span class="built_in">limit</span>: 10000</div></pre></td></tr></table></figure></p>
 <p>algolia: 先注册(非常简单，New Index即可)，然后按如下方式修改本地配置。<br>version为5.1.0，基本只需要简单改下配置即可，但还是有个bug导致被坑了良久。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">$ npm install hexo-algolia --save</div><div class="line">$ vim _config.yml</div><div class="line">algolia:</div><div class="line">  applicationID: <span class="string">'yours'</span></div><div class="line">  apiKey: <span class="string">'yours'</span></div><div class="line">  adminApiKey: <span class="string">'yours'</span></div><div class="line">  indexName: <span class="string">'blog'</span></div><div class="line">  chunkSiz: 5000</div><div class="line"></div><div class="line">$ vim themes/next/_config.yml </div><div class="line">algolia_search:</div><div class="line">  <span class="built_in">enable</span>: <span class="literal">true</span></div><div class="line">  hits:</div><div class="line">    per_page: 10</div><div class="line">  labels:</div><div class="line">    input_placeholder: 输入关键词</div><div class="line">    hits_empty: <span class="string">"没有找到与 <span class="variable">$&#123;query&#125;</span> 相关的内容"</span></div><div class="line">    hits_stats: <span class="string">"<span class="variable">$&#123;hits&#125;</span>条相关记录，共耗时 <span class="variable">$&#123;time&#125;</span> ms"</span></div><div class="line"></div><div class="line">$ vim themes/next/layout/_partials/header.swig (note:我这版本已经有了, 不需要改)</div><div class="line">          &#123;% elseif config.search || theme.algolia_search.enable %&#125;</div><div class="line">            &lt;a href=<span class="string">"javascript:;"</span> class=<span class="string">"popup-trigger"</span>&gt;</div><div class="line"></div><div class="line">$ vim node_modules/hexo-algolia/lib/command.js</div><div class="line">	  var storedPost = _.pick(data, [<span class="string">'title'</span>, <span class="string">'date'</span>, <span class="string">'slug'</span>, <span class="string">'content'</span>, <span class="string">'path'</span>, <span class="string">'excerpt'</span>, <span class="string">'permalink'</span>]);</div><div class="line">$ hexo algolia</div></pre></td></tr></table></figure></p>
 <p><img src="http://olan5qt5p.bkt.clouddn.com/algolia.png" alt="效果如下"><br>Swiftype、 微搜索</p>
@@ -47,6 +50,7 @@
 <p>5 搜索<br><a href="http://blog.doublez.cc/hexo-next添加algolia搜索.html" target="_blank" rel="external">hexo+next添加algolia搜索</a><br><a href="https://github.com/iissnan/hexo-theme-next/issues/1084" target="_blank" rel="external">next algolia bug</a></p>
 <p>5 <a href="http://www.ixirong.com/2015/05/24/hexo-blog-donate/" target="_blank" rel="external">next打赏功能</a></p>
 <p>6 <a href="http://theme-next.iissnan.com/third-party-services.html" target="_blank" rel="external">next中文帮助文档</a></p>
+<p>7 <a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="external">hexo中文帮助文档</a></p>
 ]]></content>
     
     <summary type="html">
@@ -56,163 +60,747 @@
     
     </summary>
     
-      <category term="blog" scheme="http://www.petermao.com/categories/blog/"/>
+      <category term="博客管理" scheme="http://www.petermao.com/categories/%E5%8D%9A%E5%AE%A2%E7%AE%A1%E7%90%86/"/>
     
+    
+      <category term="wordpress" scheme="http://www.petermao.com/tags/wordpress/"/>
     
       <category term="blog" scheme="http://www.petermao.com/tags/blog/"/>
     
       <category term="hexo" scheme="http://www.petermao.com/tags/hexo/"/>
+    
+      <category term="next" scheme="http://www.petermao.com/tags/next/"/>
     
       <category term="github pages" scheme="http://www.petermao.com/tags/github-pages/"/>
     
   </entry>
   
   <entry>
-    <title>Hello World</title>
-    <link href="http://www.petermao.com/blog/hello-world/"/>
-    <id>http://www.petermao.com/blog/hello-world/</id>
-    <published>2016-01-16T09:28:02.000Z</published>
-    <updated>2017-02-13T06:20:11.000Z</updated>
+    <title>leveldb注释8--snapshot机制</title>
+    <link href="http://www.petermao.com/leveldb-8-snapshot/"/>
+    <id>http://www.petermao.com/leveldb-8-snapshot/</id>
+    <published>2013-07-14T04:55:54.000Z</published>
+    <updated>2017-02-20T12:38:38.000Z</updated>
     
-    <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+    <content type="html"><![CDATA[<p>snapshot，也就是快照机制的作用，就是使得读操作不受写操作影响。其巧妙的使用了SequenceNumber来实现这一机制。</p>
+<p>上一节中，我们知道，SequenceNumber使得对写入的任何key在内部存储时都会附加一个递增的SequenceNumber。而在leveldb内部，一次snapshot也对应一个全局唯一的SequenceNumber。因此，在调用GetSnapshot获取snapshot时，leveldb所做的仅仅是生成一个SequenceNumber。db内部使用双向循环链表保存先后生成的snapshot。<a id="more"></a>获取快照GetSnapshot会将新snapshot加入链表，而释放快照ReleaseSnapshot则将snapshot从链表中删除。DBImpl类中的snapshots_成员就是这个链表。这部分代码主要在snapshot.h与db_impl.cc/.h中。代码很简单，内部是一个双向循环链表的封装。</p>
+<p><pre><br>const Snapshot* DBImpl::GetSnapshot() {<br>  MutexLock l(&amp;mutex<em>);<br>  return snapshots</em>.New(versions_-&gt;LastSequence());<br>}<br></pre><br>snapshot机制主要会影响指定的读操作与所有后续的压缩操作，直到该snapshot释放。</p>
+<p>从前面的使用接口章节中，我们知道，当读操作Get函数指定snapshot选项时，从snapshot生成至Get函数调用的这段时间里的写入操作对该次读没有影响。当指定snapshot时，Get函数会使用这个snapshot的sequencenumber+输入的key来构造要查找的LookupKey（没有指定snapshot，则使用当前已使用的最大sequencenumber）。而对于要查找的数据结构memtable、immunable memtable与sstable来讲，其内部存储的”key”都是带sequencenumber的（上一章节的分析），其最终查找到的”key”会满足key == 输入的key，而sequencenumber&lt;=Get函数传入的sequencenumber。这样，对于那些key相同但sequencenumber比较大（也就是后续针对同一个key做写入操作）的slice，则查找不到，自动的被屏蔽掉了。关于读操作Get的详细细节，我们在后续章节进行分析。</p>
+<p><pre><br>Status DBImpl::Get(const ReadOptions&amp; options,<br>                   const Slice&amp; key,<br>                   std::string<em> value) {<br>  Status s;<br>  MutexLock l(&amp;mutex_);<br>  SequenceNumber snapshot;<br>  if (options.snapshot != NULL) {<br>    snapshot = reinterpret_cast&lt;const SnapshotImpl</em>&gt;(options.snapshot)-&gt;number<em>;<br>  } else {<br>    snapshot = versions</em>-&gt;LastSequence();<br>  }</pre></p>
+<p>  MemTable<em> mem = mem_;<br>  MemTable</em> imm = imm<em>;<br>  Version* current = versions</em>-&gt;current();<br>  mem-&gt;Ref();<br>  if (imm != NULL) imm-&gt;Ref();</p>
+<h2 id="current-gt-Ref"><a href="#current-gt-Ref" class="headerlink" title="  current-&gt;Ref();"></a>  current-&gt;Ref();</h2><p>  {<br>    mutex_.Unlock();<br>    // mem与imm是带sequence_number以保证不会查到新数据<br>    // 查找顺序依次是：memtable、immutable memtable、sstable文件<br>    // First look in the memtable, then in the immutable memtable (if any).<br>    LookupKey lkey(key, snapshot);<br>    if (mem-&gt;Get(lkey, value, &amp;s)) {<br>      // Done<br>    } else if (imm != NULL &amp;&amp; imm-&gt;Get(lkey, value, &amp;s)) {<br>      // Done<br>    } else {<br>      s = current-&gt;Get(options, lkey, value, &amp;stats);<br>      have_stat_update = true;</p>
+<pre><code>}
+---
+</code></pre><p>  }<br><br>leveldb的snapshot机制不会在snapshot生成时直接影响系统，而是通过影响压缩操作来影响。比如redis的快照机制，其生成快照时，相当于dump整个内存中的db。<br>通过前面的Get分析，我们知道，因为SequenceNumber对查找的影响，使得后续的写是完全透明的。但compact操作会将写入的值与已有的值进行合并。这样，后续写入的值可能会覆盖前面已写过的值或者后续的删除操作删除了该key。实际上，在进行major compact时（minor compact只是将immunable memtable转储至1个level 0的sstable文件），会检查这些(key,value)的sequencenumber。当有相同key的多个操作序列时，正常情况下，只会按操作第一个序列（也就是最新的），后续的直接drop。但snapshot机制，会使得对于这些多个操作序列的除第一个之外的操作，只有sequencenumber比系统中最小的snapshot还小的才丢弃（实际细节比这个还复杂点）。这样，这些操作序列都会被保存下来用于后续的snapshot操作。这部分代码主要在DBImpl::DoCompactionWork函数中，更多细节有待我们讲述压缩机制时再来分析。</p>
+<p><pre></pre></p>
+<h2 id="Status-DBImpl-DoCompactionWork-CompactionState-compact"><a href="#Status-DBImpl-DoCompactionWork-CompactionState-compact" class="headerlink" title="Status DBImpl::DoCompactionWork(CompactionState* compact) {"></a>Status DBImpl::DoCompactionWork(CompactionState* compact) {</h2><p>   if (snapshots_.empty()) {<br>    compact-&gt;smallest<em>snapshot = versions</em>-&gt;LastSequence();<br>  } else {<br>    compact-&gt;smallest<em>snapshot = snapshots</em>.oldest()-&gt;number_;</p>
+<h2 id=""><a href="#" class="headerlink" title="  }"></a>  }</h2><p>  Iterator* input = versions_-&gt;MakeInputIterator(compact-&gt;compaction);<br>  input-&gt;SeekToFirst();<br>  Status status;<br>  ParsedInternalKey ikey;<br>  std::string current_user_key;<br>  bool has_current_user_key = false;<br>  SequenceNumber last_sequence_for_key = kMaxSequenceNumber;<br>  // 遍历输入<br>  for (; input-&gt;Valid() &amp;&amp; !shutting<em>down</em>.Acquire_Load(); ) {<br>    // Prioritize immutable compaction work</p>
+<pre><code>if (has_imm_.NoBarrier_Load() != NULL) {
+  ---
+}
+
+Slice key = input-&gt;key();
+if (compact-&gt;compaction-&gt;ShouldStopBefore(key) &amp;&amp;
+    compact-&gt;builder != NULL) {
+    // 输出新文件
+  status = FinishCompactionOutputFile(compact, input);
+  if (!status.ok()) {
+    break;
+  }
+}
+
+// Handle key/value, add to state, etc.
+bool drop = false;
+// 因为有delete、多次插入，同一个key可能出现多次
+if (!ParseInternalKey(key, &amp;ikey)) {
+  // Do not hide error keys
+  current_user_key.clear();
+  has_current_user_key = false;
+  last_sequence_for_key = kMaxSequenceNumber;
+} else {
+  if (!has_current_user_key ||
+     // 注意这里的比较是直接比较user_key，也就是不带sequencenumber
+      user_comparator()-&gt;Compare(ikey.user_key,
+                                 Slice(current_user_key)) != 0) {
+    // First occurrence of this user key
+    current_user_key.assign(ikey.user_key.data(), ikey.user_key.size());
+    has_current_user_key = true;
+    last_sequence_for_key = kMaxSequenceNumber;
+  }
+
+  if (last_sequence_for_key &lt;= compact-&gt;smallest_snapshot) {
+    // Hidden by an newer entry for same user key
+    // 多个key，后续的是更老的，直接drop，保留第一个
+    drop = true;    // (A)
+  } else if (ikey.type == kTypeDeletion &amp;&amp;
+             ikey.sequence &lt;= compact-&gt;smallest_snapshot &amp;&amp;
+             compact-&gt;compaction-&gt;IsBaseLevelForKey(ikey.user_key)) {
+    // For this user key:
+    // (1) there is no data in higher levels
+    // (2) data in lower levels will have larger sequence numbers
+    // (3) data in layers that are being compacted here and have
+    //     smaller sequence numbers will be dropped in the next
+    //     few iterations of this loop (by rule (A) above).
+    // Therefore this deletion marker is obsolete and can be dropped.
+    drop = true;
+  }
+
+  last_sequence_for_key = ikey.sequence;
+}
+---
+</code></pre><p><br>由于snapshot对压缩机制有影响，对snapshot后续插入的多个值都不会压缩。因此在使用时，用完后要尽可能快释放。</p>
 ]]></content>
     
     <summary type="html">
     
-      &lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.
+      &lt;p&gt;snapshot，也就是快照机制的作用，就是使得读操作不受写操作影响。其巧妙的使用了SequenceNumber来实现这一机制。&lt;/p&gt;
+&lt;p&gt;上一节中，我们知道，SequenceNumber使得对写入的任何key在内部存储时都会附加一个递增的SequenceNumber。而在leveldb内部，一次snapshot也对应一个全局唯一的SequenceNumber。因此，在调用GetSnapshot获取snapshot时，leveldb所做的仅仅是生成一个SequenceNumber。db内部使用双向循环链表保存先后生成的snapshot。
     
     </summary>
     
-      <category term="blog" scheme="http://www.petermao.com/categories/blog/"/>
+      <category term="leveldb" scheme="http://www.petermao.com/categories/leveldb/"/>
     
+    
+      <category term="源码分析" scheme="http://www.petermao.com/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
+    
+      <category term="leveldb" scheme="http://www.petermao.com/tags/leveldb/"/>
+    
+      <category term="存储" scheme="http://www.petermao.com/tags/%E5%AD%98%E5%82%A8/"/>
+    
+      <category term="snapshot" scheme="http://www.petermao.com/tags/snapshot/"/>
     
   </entry>
   
   <entry>
-    <title>note-</title>
-    <link href="http://www.petermao.com/%E6%9C%AA%E5%88%86%E7%B1%BB/note/"/>
-    <id>http://www.petermao.com/未分类/note/</id>
-    <published>2013-10-09T19:28:16.000Z</published>
-    <updated>2017-02-14T02:02:51.000Z</updated>
+    <title>leveldb注释7–key与value</title>
+    <link href="http://www.petermao.com/leveldb-7-key-value/"/>
+    <id>http://www.petermao.com/leveldb-7-key-value/</id>
+    <published>2013-07-13T19:04:51.000Z</published>
+    <updated>2017-02-20T12:38:38.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>作为一个kv的系统，key的存储至关重要。在leveldb中，主要涉及到如下几个key，user_key、InternalKey与LookupKey(memtable_key)。<br>其关系构成如下图。user_key就是用户输入的key，而InternalKey在user_key的基础上封装了sequence_num+type。sequence_num是一个全局递增的序列号，每一次Put操作都会递增。这样，不同时间的写入操作会得到不一样的sequence_num。前面章节中提到的sstable单条record中的key，其内部其实就是一个InternalKey。sequence_num主要跟snapshot机制与version机制相关，对压缩会产生一定影响。这些我们在后续章节分析。根据type字段，可以获知本次写入操作是写还是删除（也就是说删除是一种特殊的写）。而LookupKey/memtable_key用于在memtable中，多了一个长度字段。代码主要在dbformat.cc/.h中。<a id="more"></a><br>[caption id=”attachment_797” align=”alignnone” width=”475” caption=”leveldb lookup key”]<a href="http://www.petermao.com/wp-content/uploads/2013/11/leveldb-lookup-key.png"><img src="http://www.petermao.com/wp-content/uploads/2013/11/leveldb-lookup-key.png" alt="leveldb lookup key" title="leveldb lookup key"></a>[/caption]</p>
+<p><pre><br>static uint64_t PackSequenceAndType(uint64_t seq, ValueType t) {<br>  assert(seq &lt;= kMaxSequenceNumber);<br>  assert(t &lt;= kValueTypeForSeek);<br>  return (seq &lt;&lt;  \8) | t;<br>}<br></pre><br>skiplist中的单个节点不仅存储了Key，也存储了value。格式如下图。尽管单个节点的开头部分是一个LookupKey，但其内部比较时，还是使用的InternalKey。也就是说，比较时，先使用InternalKey内部的user_key进行比较，再比较sequence_num。这样不管是memtable还是sstable文件，其内部都是按InternalKey有序的。<br>[caption id=”attachment_799” align=”alignnone” width=”621” caption=”leveldb skiplist node”]<a href="http://www.petermao.com/wp-content/uploads/2013/11/leveldb-skiplist.png"><img src="http://www.petermao.com/wp-content/uploads/2013/11/leveldb-skiplist.png" alt="leveldb skiplist node" title="leveldb skiplist node"></a>[/caption]</p>
+<p><pre><br>int InternalKeyComparator::Compare(const Slice&amp; akey, const Slice&amp; bkey) const {<br>  // Order by:<br>  //    increasing user key (according to user-supplied comparator)<br>  //    decreasing sequence number<br>  //    decreasing type (though sequence# should be enough to disambiguate)<br>  int r = user<em>comparator</em>-&gt;Compare(ExtractUserKey(akey), ExtractUserKey(bkey));<br>  if (r == 0) {<br>    const uint64_t anum = DecodeFixed64(akey.data() + akey.size() - 8);<br>    const uint64_t bnum = DecodeFixed64(bkey.data() + bkey.size() - 8);<br>    if (anum &gt; bnum) {<br>      r = -1;<br>    } else if (anum &lt; bnum) {<br>      r = +1;<br>    }<br>  }<br>  return r;<br>}<br></pre><br>在进行Get操作时，leveldb会使用用户传入的user_key与当前db最大的sequence_num进行合并，以得到LookupKey（实际还会受snapshot机制影响）。但在内部查找时还是使用的InternalKey。</p>
+<p>Put操作会稍微复杂点。leveldb的3种写入操作最终都会封装成WriteBatch。这3种写入操作分别是Put(写入单条key<br>/value)、Delete(删除单条key)、Write(批量进行Put与Delete操作)。WriteBath的内部格式如下图。WriteBatch所表示的多条记录最终会按SkipList所要求的格式1条条地顺序插入到memtable中。<br>[caption id=”attachment_801” align=”alignnone” width=”621” caption=”leveldb writebatch”]<a href="http://www.petermao.com/wp-content/uploads/2013/11/leveldb-writebatch.png"><img src="http://www.petermao.com/wp-content/uploads/2013/11/leveldb-writebatch.png" alt="leveldb writebatch" title="leveldb writebatch"></a>[/caption]</p>
+<p><pre><br>Status WriteBatchInternal::InsertInto(const WriteBatch<em> b,<br>                                      MemTable</em> memtable) {<br>  MemTableInserter inserter;<br>  // memtable 的初始sequence为WriteBatchInternal中的seq<br>  inserter.sequence<em> = WriteBatchInternal::Sequence(b);<br>  inserter.mem</em> = memtable;<br>  return b-&gt;Iterate(&amp;inserter);<br>}</pre></p>
+<p>Status WriteBatch::Iterate(Handler* handler) const {<br>  Slice input(rep_);<br>  if (input.size() &lt; kHeader) {<br>    return Status::Corruption(“malformed WriteBatch (too small)”);<br>  }<br>  // kHeader=12 = seq(8字节) + count(4字节)<br>  input.remove_prefix(kHeader);<br>  Slice key, value;<br>  int found = 0;<br>  while (!input.empty()) {<br>    found++;<br>    char tag = input[0];<br>    // type:1字节<br>    input.remove_prefix(1);<br>    switch (tag) {<br>      case kTypeValue:<br>        if (GetLengthPrefixedSlice(&amp;input, &amp;key) &amp;&amp;<br>            GetLengthPrefixedSlice(&amp;input, &amp;value)) {<br>          handler-&gt;Put(key, value);<br>        } else {<br>          return Status::Corruption(“bad WriteBatch Put”);<br>        }<br>        break;<br>      case kTypeDeletion:<br>        if (GetLengthPrefixedSlice(&amp;input, &amp;key)) {<br>          handler-&gt;Delete(key);<br>        } else {<br>          return Status::Corruption(“bad WriteBatch Delete”);<br>        }<br>        break;<br>      default:<br>        return Status::Corruption(“unknown WriteBatch tag”);<br>    }<br>  }<br>  if (found != WriteBatchInternal::Count(this)) {<br>    return Status::Corruption(“WriteBatch has wrong count”);<br>  } else {<br>    return Status::OK();<br>  }<br>}<br><br>关于读写压缩等对key/value的具体操作，我们在后续章节进行分析，这里只需要了解大概。</p>
+]]></content>
     
     <summary type="html">
     
+      &lt;p&gt;作为一个kv的系统，key的存储至关重要。在leveldb中，主要涉及到如下几个key，user_key、InternalKey与LookupKey(memtable_key)。&lt;br&gt;其关系构成如下图。user_key就是用户输入的key，而InternalKey在user_key的基础上封装了sequence_num+type。sequence_num是一个全局递增的序列号，每一次Put操作都会递增。这样，不同时间的写入操作会得到不一样的sequence_num。前面章节中提到的sstable单条record中的key，其内部其实就是一个InternalKey。sequence_num主要跟snapshot机制与version机制相关，对压缩会产生一定影响。这些我们在后续章节分析。根据type字段，可以获知本次写入操作是写还是删除（也就是说删除是一种特殊的写）。而LookupKey/memtable_key用于在memtable中，多了一个长度字段。代码主要在dbformat.cc/.h中。
+    
     </summary>
     
-      <category term="未分类" scheme="http://www.petermao.com/categories/%E6%9C%AA%E5%88%86%E7%B1%BB/"/>
+      <category term="leveldb" scheme="http://www.petermao.com/categories/leveldb/"/>
     
+    
+      <category term="源码分析" scheme="http://www.petermao.com/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
+    
+      <category term="leveldb" scheme="http://www.petermao.com/tags/leveldb/"/>
+    
+      <category term="存储" scheme="http://www.petermao.com/tags/%E5%AD%98%E5%82%A8/"/>
+    
+      <category term="key" scheme="http://www.petermao.com/tags/key/"/>
     
   </entry>
   
   <entry>
-    <title>leveldb注释2--整体介绍</title>
-    <link href="http://www.petermao.com/%E6%9C%AA%E5%88%86%E7%B1%BB/leveldb-note-2-overall-introduction/"/>
-    <id>http://www.petermao.com/未分类/leveldb-note-2-overall-introduction/</id>
-    <published>2013-10-09T19:24:51.000Z</published>
-    <updated>2017-02-14T02:02:51.000Z</updated>
+    <title>leveldb注释6–log文件</title>
+    <link href="http://www.petermao.com/leveldb-6-log/"/>
+    <id>http://www.petermao.com/leveldb-6-log/</id>
+    <published>2013-07-12T00:45:35.000Z</published>
+    <updated>2017-02-20T12:38:38.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>在leveldb中，除了sstable文件格式，还有log文件格式。该文件格式用于存储写操作的日志与manifest文件（不同的文件名）。前者用于异常回滚。后者用于记录sstable文件的元数据。整体架构中提到过，leveldb在将记录写入内存中的memtable之前，会先写入log文件，memtable会延后持久化。在这个过程中进程可能down掉。有了log写操作文件后，即使系统发生故障，levelDB也可以根据log写操作日志文件恢复内存的memtable内容，不会造成丢失数据。而manifest文件用于记录所有的sstable文件的元数据，比如sstable文件的编号，key范围。<a id="more"></a></p>
+<p>log文件格式也是分块存储的。跟sstable文件不同的是，一方面sstable是有序存储的，因此为了加速读取，有相关索引，而log文件始终是顺序读写的，不需要定位某个key，因而不需要索引信息。另一方面sstable的data block虽大致按4KB分块，但实际上存储的块大小通常会比4KB大，这主要是因为单条record不会跨block。而log文件中的block则严格保证为一样，默认值为32KB。因此，log文件中的record可能会跨块，为了区分record是否结束，不同的block有不同的类型（kFullType/kFirstType/kMiddleType/kLastType）。如果block剩余的空间足以存储新的record，则type取值为kFullType，否则则有可能出现1个FirstType的block（剩余部分block存储record的部分内容）+ 0或者多个kMiddleType的block + 1个kLastType的block。除了type字段之外，record还包括check sum与数据的长度，最后才是具体的数据。校验和针对type+length+data。详细的格式如下图所示。如果剩余block的空间&lt;7（checksum+length+type），则剩余的直接填充0，另起一块存储数据。leveldb严格按照32k为一个单位读写一个block。<br>[caption id=”attachment_757” align=”alignnone” width=”430” caption=”leveldb log”]<a href="http://www.petermao.com/wp-content/uploads/2013/10/leveldb-log1.png"><img src="http://www.petermao.com/wp-content/uploads/2013/10/leveldb-log1.png" alt="leveldb log" title="leveldb log"></a>[/caption]<br>doc/log_format.txt中讲述了这种文件格式的benefit与downside。<br>好处如下：<br>（1）容错性好。不需要额外的信息来同步。发现出错了，直接跳至下一个block（32K为一个block）。<br>（2）容易切分，适合mapreduce等大数据处理方式。切分时，需按逻辑上的一个Record。<br>（3）对于大记录，也不需要额外的字段来表示其长度。自然的按32k切分了嘛。<br>一些限制如下：<br>（1）对于小记录，没有pack机制。<br>（2）没有压缩。<br>对于这些限制，作者认为可以通过添加新的type来实现。</p>
+<p>代码主要在log_format.h，log_reader.cc/.h，log_writer.cc/.h。前者定义了一些，log::Writer类用于写，比较简单，log::Reader考虑到容错，稍微复杂些。但整体上还是很简单的，给点耐心看吧。</p>
+]]></content>
     
     <summary type="html">
     
+      &lt;p&gt;在leveldb中，除了sstable文件格式，还有log文件格式。该文件格式用于存储写操作的日志与manifest文件（不同的文件名）。前者用于异常回滚。后者用于记录sstable文件的元数据。整体架构中提到过，leveldb在将记录写入内存中的memtable之前，会先写入log文件，memtable会延后持久化。在这个过程中进程可能down掉。有了log写操作文件后，即使系统发生故障，levelDB也可以根据log写操作日志文件恢复内存的memtable内容，不会造成丢失数据。而manifest文件用于记录所有的sstable文件的元数据，比如sstable文件的编号，key范围。
+    
     </summary>
     
-      <category term="未分类" scheme="http://www.petermao.com/categories/%E6%9C%AA%E5%88%86%E7%B1%BB/"/>
+      <category term="leveldb" scheme="http://www.petermao.com/categories/leveldb/"/>
     
+    
+      <category term="源码分析" scheme="http://www.petermao.com/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
+    
+      <category term="leveldb" scheme="http://www.petermao.com/tags/leveldb/"/>
+    
+      <category term="存储" scheme="http://www.petermao.com/tags/%E5%AD%98%E5%82%A8/"/>
+    
+      <category term="leveldb log" scheme="http://www.petermao.com/tags/leveldb-log/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>leveldb注释5--sstable文件</title>
+    <link href="http://www.petermao.com/leveldb-5-sstable/"/>
+    <id>http://www.petermao.com/leveldb-5-sstable/</id>
+    <published>2013-07-11T19:25:10.000Z</published>
+    <updated>2017-02-20T12:38:38.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>本节主要介绍sstable文件的格式及单个sstable文件的get/put。sstable文件全称是sorted string table，是一个有序且带索引的文件。</p>
+<p>从前面的分析可知，level 0级的sstable文件是由内存中的immunable memtable经过minor compact形成的(也就是直接dump)，而level&gt;0级的文件是由level-1级别的文件经过major compact形成的。关于compact过程，我们在后续章节分析。这里着重于分析单个sstable文件的相关接口，代码在table/目录。<a id="more"></a></p>
+<p>下图是sstable文件的整体结构。整体上，sstable文件分为数据区与索引区，尾部的footer指出了meta index block与data index block的偏移与大小，data index block指出了各data block的偏移与大小，meta index block指出了各meta block的偏移与大小。<br><a href="http://www.petermao.com/wp-content/uploads/2013/10/leveldb-sstable.png"><img src="http://www.petermao.com/wp-content/uploads/2013/10/leveldb-sstable.png" alt="sstable文件" title="leveldb sstable"></a><br>先看footer结构。如下图。footer位于sstable文件尾部，占用空间固定为48个字节。其末尾8个字节是一个magic_number。metaindex_handle与index_handle物理上占用了40个字节，但实际上存储可能连32字节都不到。每一个handle的结构BlockHandle如右图，逻辑上分别表示offset+size，在内存中占用16个字节，但存储时由于采用可变长度编码，每个handle的物理存储通常不到8+8字节。因此这里两个handle总共占用不到32个字节，剩余填充0。<br>[caption id=”attachment_723” align=”alignnone” width=”711” caption=”leveldb footer + block handle”]<a href="http://www.petermao.com/wp-content/uploads/2013/10/leveldb-footer.png"><img src="http://www.petermao.com/wp-content/uploads/2013/10/leveldb-footer.png" alt="leveldb footer + block handle" title="leveldb footer"></a>[/caption]<br>BlockHandle指出了block的偏移与大小。在sstable文件中，一般有多个data block，多个meta block(当前版本只有一个filter block，可扩充)，1个meta index block，1个data index block。其中filter block的内部结构稍微不同于其他Block，但都是用BlockHandle来指向的。Footer与BlockHandle的代码主要format.cc/.h。其中Footer封装了footer的结构，BlockHandle对应图中的BlockHandle，另外有BlockContent表示从Block中实际读入的整个Block的字符串，而ReadBlock全局函数通过BlockHandle(指出了Block的偏移与大小)从指定文件中读取Block内容，并通过BlockContent返回。读取时可能需要校验crc32并解压。ReadBlock部分代码如下：</p>
+<pre>
+Status ReadBlock(RandomAccessFile* file,
+                 const ReadOptions& options,
+                 const BlockHandle& handle,
+                 BlockContents* result) {
+  result->data = Slice();
+  result->cachable = false;
+  result->heap_allocated = false;
+
+  // Read the block contents as well as the type/crc footer.
+  // See table_builder.cc for the code that built this structure.
+  size_t n = static_cast<size_t>(handle.size());
+  char* buf = new char[n + kBlockTrailerSize];
+  Slice contents;
+  Status s = file->Read(handle.offset(), n + kBlockTrailerSize, &contents, buf);
+  if (!s.ok()) {
+    delete[] buf;
+    return s;
+  }
+  if (contents.size() != n + kBlockTrailerSize) {
+    delete[] buf;
+    return Status::Corruption("truncated block read");
+  }
+
+  // Check the crc of the type and the block contents
+  const char* data = contents.data();    // Pointer to where Read put the data
+  // crc32校验
+  if (options.verify_checksums) {
+    const uint32_t crc = crc32c::Unmask(DecodeFixed32(data + n + 1));
+    // data + type + crc
+    const uint32_t actual = crc32c::Value(data, n + 1);
+    if (actual != crc) {
+      delete[] buf;
+      s = Status::Corruption("block checksum mismatch");
+      return s;
+    }
+  }
+
+  switch (data[n]) {
+    case kNoCompression:
+      ---
+      // Ok
+      break;
+    // snappy压缩
+    case kSnappyCompression: {
+      size_t ulength = 0;
+      if (!port::Snappy_GetUncompressedLength(data, n, &ulength)) {
+        delete[] buf;
+        return Status::Corruption("corrupted compressed block contents");
+      }
+      char* ubuf = new char[ulength];
+      if (!port::Snappy_Uncompress(data, n, ubuf)) {
+        delete[] buf;
+        delete[] ubuf;
+        return Status::Corruption("corrupted compressed block contents");
+      }
+      delete[] buf;
+      result->data = Slice(ubuf, ulength);
+      result->heap_allocated = true;
+      result->cachable = true;
+      break;
+    }
+    default:
+      ---
+  }
+  ---
+}
+</size_t></pre>
+
+<p>前面通过ReadBlock读取的BlockContent内容一般通过new Block(BlockContent)初始化为具体的Block对象。现在我们看看Block的内部结构，如下图。逻辑上主要分为数据与重启点。重启点也是一个指针，指出了一些特殊的位置。data block中的key是有序存储的，相邻的key之间可能有重复，因此存储时采用前缀压缩，后一个key只存储与前一个key不同的部分。那些重启点指出的位置就表示该key不按前缀压缩，而是完整存储该key。除了减少压缩空间之外，重启点的第二个作用就是加速读取。如果说data index block可以通过二分来定位具体的block，那么重启点则可以通过二分的方法来定位具体的重启点位置，进一步减少了需要读取的数据。对于leveldb来讲，可以通过options.block_size与options.block_restart_interval来设置block的大小与重启点的间隔。默认data block的大小为4K。而重启点则每隔16个key。具体的单条record的存储格式如下图所示。<br>[caption id=”attachment_726” align=”alignnone” width=”459” caption=”leveldb block”]<a href="http://www.petermao.com/wp-content/uploads/2013/10/leveldb-block1.png"><img src="http://www.petermao.com/wp-content/uploads/2013/10/leveldb-block1.png" alt="leveldb block" title="leveldb block"></a>[/caption]<br>[caption id=”attachment_729” align=”alignnone” width=”646” caption=”leveldb单条记录存储格式”]<a href="http://www.petermao.com/wp-content/uploads/2013/10/leveldb-key.png"><img src="http://www.petermao.com/wp-content/uploads/2013/10/leveldb-key.png" alt="leveldb单条记录存储格式" title="leveldb key"></a>[/caption]<br>在进一步分析Block代码之前，我们先来搞清楚这样一个问题。前面提到，data block与meta index block、data index block都是采用block来存储的(filter block稍微不同)。而对于block来讲，其都是按(key,value)格式存储一条条的record的。对于这些不同类型的block，其(key,value)都是什么了？总结如下图。现在只有一个meta block用于filter，因此meta index block中也只有一条记录，其key是filter. + filter_policy的name。<br>[caption id=”attachment_732” align=”alignnone” width=”568” caption=”不同block的(key,value)对”]<a href="http://www.petermao.com/wp-content/uploads/2013/10/leveldb-key-of-block.png"><img src="http://www.petermao.com/wp-content/uploads/2013/10/leveldb-key-of-block.png" alt="不同block的(key,value)对" title="leveldb key of block"></a>[/caption]<br>block的具体实现在block.cc/.h与block<em>builder.cc/.h中。前者用于读，后者用于写。读取时，一般先通过前面提到的ReadBlock读取一块至BlockContent中，然后再通过Block的构造函数初始化，并通过Block::Iter子类用于外部遍历或者定位具体某个key。Block类代码简单。Block::Iter的代码内部结构如下图所示。data</em>指向读入的BlockContent内容，current<em>指向当前的value，restart</em>则指出了重启点数据的起始位置，restart_index则对应当前value的重启点索引。查找时，先通过restart_index指向的value定位，找到相应的重启点后，再在重启点内部遍历。顺序遍历整个block时，需要注意修改restart<em>index</em>。代码细节请自行阅读。<br>[caption id=”attachment_735” align=”alignnone” width=”492” caption=”leveldb Block::Iter”]<a href="http://www.petermao.com/wp-content/uploads/2013/10/leveldb-block_iter.png"><img src="http://www.petermao.com/wp-content/uploads/2013/10/leveldb-block_iter.png" alt="leveldb Block::Iter" title="leveldb Block::Iter"></a>[/caption]<br>写block，则通过block<em>builder.cc/.h中的BlockBuilder类来完成。一般是通过多次调用Add方法，再Finish结束这个block。BlockBuilder的内部结构如下图。由于block的重启点位于block尾部，因此需要先保存这些重启点，Finish时再顺序写入。图中的restarts</em> vector就是用来保存各个重启点偏移的。counter_用于计数，当超过重启间隔时，需开启一个新的重启点。最后Finish时顺序写入这些重启点。代码也很简单。<br>[caption id=”attachment_738” align=”alignnone” width=”388” caption=”leveldb BlockBuilder”]<a href="http://www.petermao.com/wp-content/uploads/2013/10/leveldb-blockbuilder.png"><img src="http://www.petermao.com/wp-content/uploads/2013/10/leveldb-blockbuilder.png" alt="leveldb BlockBuilder" title="leveldb blockbuilder"></a>[/caption]<br>现在我们再来看看稍微特殊的FilterBlock。FilterBlock内部不像Block有复杂的(key,value)格式，其只有一个字符串。该字符串的内部结构如下图。filterblock保存多个filter string，每个filter string针对一段block，间隔为2^base<em>lg</em>，保存在末尾，默认值为2KB，也就是说，filter block每隔2kb block offset的key生成一个filter string，offset<em>array</em>指出了这些filter string的偏移。过滤时，一般先通过data index block获取key的大致block offset，再通过filter string的offset<em>array</em>获取该block offset的filter string，再进行过滤。生成时，对同一个block offset范围的数据一起构建filter string。具体代码细节在filter_block.cc/.h中。读写分别用FilterBlockReader与FilterBlockBuilder来封装。<br>[caption id=”attachment_740” align=”alignnone” width=”610” caption=”leveldb filter block”]<a href="http://www.petermao.com/wp-content/uploads/2013/10/leveldb-filter-block.png"><img src="http://www.petermao.com/wp-content/uploads/2013/10/leveldb-filter-block.png" alt="leveldb filter block" title="leveldb filter block"></a>[/caption]<br>最后我们来看看table类。table类表示了整个sstable文件。外部通过这个类访问sstable，table内部访问block/meta block。</p>
+<p>外部使用时，主要有两类接口。一类是读，另一类是写。读接口在table.cc/.h中实现，写接口在table_builder.cc/.h中实现。读接口的调用顺序为，Open打开一个sst文件，然后NewIterator返回一个迭代器用于遍历整个table，或者调用InternalGet用于Seek某个key。这些接口一般通过table_cache类来调用。table_cache是table的缓存。table_cache会先查看是否有cache，没有则读table文件，写cache。table_cache的具体细节我们在Get章节中分析。写接口的调用顺序为，TableBuilder构造函数初始化–&gt;多次调用Add(key,value)–&gt;Finish/Abandon(异常退出)结束。InternalGet的主要代码如下。内部会先查询filter与BlockCache。</p>
+<p><pre><br>Status Table::InternalGet(const ReadOptions&amp; options, const Slice&amp; k,<br>                          void<em> arg,<br>                          void (</em>saver)(void<em>, const Slice&amp;, const Slice&amp;)) {<br>  Status s;<br>  Iterator</em> iiter = rep_-&gt;index<em>block-&gt;NewIterator(rep</em>-&gt;options.comparator);<br>  //先定位该值的offset<br>  iiter-&gt;Seek(k);<br>  if (iiter-&gt;Valid()) {<br>    Slice handle<em>value = iiter-&gt;value();<br>    FilterBlockReader* filter = rep</em>-&gt;filter;<br>    BlockHandle handle;<br>    // 根据该offset查询filter<br>    if (filter != NULL &amp;&amp;<br>        handle.DecodeFrom(&amp;handle_value).ok() &amp;&amp;<br>        !filter-&gt;KeyMayMatch(handle.offset(), k)) {<br>      // Not found<br>    } else {<br>      Slice handle = iiter-&gt;value();<br>      // 没被过滤，表示该key可能存在，需要读取对应的block<br>      Iterator<em> block_iter = BlockReader(this, options, iiter-&gt;value());<br>      block_iter-&gt;Seek(k);<br>      if (block_iter-&gt;Valid()) {<br>        (</em>saver)(arg, block_iter-&gt;key(), block_iter-&gt;value());<br>      }<br>      s = block_iter-&gt;status();<br>      delete block_iter;<br>    }</pre></p>
+<h2 id=""><a href="#" class="headerlink" title="  }"></a>  }</h2><p>}</p>
+<p>Iterator<em> Table::BlockReader(void</em> arg,<br>                             const ReadOptions&amp; options,<br>                             const Slice&amp; index_value) {<br>  Table<em> table = reinterpret_cast&lt;Table</em>&gt;(arg);<br>  Cache<em> block<em>cache = table-&gt;rep</em>-&gt;options.block_cache;<br>  Block</em> block = NULL;<br>  Cache::Handle* cache_handle = NULL;</p>
+<p>  BlockHandle handle;<br>  Slice input = index_value;<br>  Status s = handle.DecodeFrom(&amp;input);<br>  // We intentionally allow extra stuff in index_value so that we<br>  // can add more features in the future.</p>
+<p>  // block:先查block cache<br>  // cache的key是table的cache_id + block_offset<br>  // 每个table文件对应一个唯一的cache_id<br>  if (s.ok()) {<br>    BlockContents contents;<br>    if (block_cache != NULL) {<br>      char cache_key_buffer[16];</p>
+<pre><code>  EncodeFixed64(cache_key_buffer, table-&gt;rep_-&gt;cache_id);
+  EncodeFixed64(cache_key_buffer+8, handle.offset());
+  Slice key(cache_key_buffer, sizeof(cache_key_buffer));
+  cache_handle = block_cache-&gt;Lookup(key);
+  if (cache_handle != NULL) {
+    block = reinterpret_cast&lt;Block*&gt;(block_cache-&gt;Value(cache_handle));
+  } else {
+    // 没有则直接读取，并加入block cache
+    s = ReadBlock(table-&gt;rep_-&gt;file, options, handle, &amp;contents);
+    if (s.ok()) {
+      block = new Block(contents);
+      if (contents.cachable &amp;&amp; options.fill_cache) {
+        cache_handle = block_cache-&gt;Insert(
+            key, block, block-&gt;size(), &amp;DeleteCachedBlock);
+      }
+    }
+  }
+} else {
+  s = ReadBlock(table-&gt;rep_-&gt;file, options, handle, &amp;contents);
+  if (s.ok()) {
+    block = new Block(contents);
+  }
+}
+</code></pre><h2 id="-1"><a href="#-1" class="headerlink" title="  }"></a>  }</h2><p>}<br><br>写table的主要函数Add与Finish代码如下。代码清晰，请自行阅读。</p>
+<p><pre><br>void TableBuilder::Add(const Slice&amp; key, const Slice&amp; value) {<br>  Rep* r = rep_;<br>  assert(!r-&gt;closed);<br>  if (!ok()) return;<br>  // 需要有序插入<br>  if (r-&gt;num_entries &gt; 0) {<br>    assert(r-&gt;options.comparator-&gt;Compare(key, Slice(r-&gt;last_key)) &gt; 0);<br>  }</pre></p>
+<p>  // 前面提到过data index block的key，其值需要等候后一个block的key写入时才能构造，pending_index_entry就表示了前一个block的index，此时构造其key，并写入index_block<br>  if (r-&gt;pending_index_entry) {<br>    assert(r-&gt;data_block.empty());<br>    r-&gt;options.comparator-&gt;FindShortestSeparator(&amp;r-&gt;last_key, key);<br>    std::string handle_encoding;<br>    r-&gt;pending_handle.EncodeTo(&amp;handle_encoding);<br>    r-&gt;index_block.Add(r-&gt;last_key, Slice(handle_encoding));<br>    r-&gt;pending_index_entry = false;<br>  }</p>
+<p>  // 往filter block中添加key<br>  if (r-&gt;filter_block != NULL) {<br>    r-&gt;filter_block-&gt;AddKey(key);<br>  }</p>
+<p>  r-&gt;last_key.assign(key.data(), key.size());<br>  r-&gt;num_entries++;<br>  r-&gt;data_block.Add(key, value);</p>
+<p>  const size_t estimated_block_size = r-&gt;data_block.CurrentSizeEstimate();<br>  // block_size限制<br>  if (estimated_block_size &gt;= r-&gt;options.block_size) {<br>    Flush();<br>  }<br>}</p>
+<p>Status TableBuilder::Finish() {<br>  Rep* r = rep_;<br>  Flush();<br>  assert(!r-&gt;closed);<br>  r-&gt;closed = true;</p>
+<p>  BlockHandle filter_block_handle, metaindex_block_handle, index_block_handle;</p>
+<p>  // Write filter block<br>  if (ok() &amp;&amp; r-&gt;filter_block != NULL) {<br>    WriteRawBlock(r-&gt;filter_block-&gt;Finish(), kNoCompression,<br>                  &amp;filter_block_handle);<br>  }</p>
+<p>  // Write metaindex block<br>  if (ok()) {<br>    BlockBuilder meta_index_block(&amp;r-&gt;options);<br>    if (r-&gt;filter_block != NULL) {<br>      // Add mapping from “filter.Name” to location of filter data<br>      std::string key = “filter.”;<br>      key.append(r-&gt;options.filter_policy-&gt;Name());<br>      std::string handle_encoding;<br>      filter_block_handle.EncodeTo(&amp;handle_encoding);<br>      meta_index_block.Add(key, handle_encoding);<br>    }</p>
+<pre><code>// TODO(postrelease): Add stats and other meta blocks
+WriteBlock(&amp;meta_index_block, &amp;metaindex_block_handle);
+</code></pre><p>  }</p>
+<p>  // Write index block<br>  if (ok()) {<br>    if (r-&gt;pending_index_entry) {<br>      r-&gt;options.comparator-&gt;FindShortSuccessor(&amp;r-&gt;last_key);<br>      std::string handle_encoding;<br>      r-&gt;pending_handle.EncodeTo(&amp;handle_encoding);<br>      r-&gt;index_block.Add(r-&gt;last_key, Slice(handle_encoding));<br>      r-&gt;pending_index_entry = false;<br>    }<br>    WriteBlock(&amp;r-&gt;index_block, &amp;index_block_handle);<br>  }</p>
+<p>  // Write footer<br>  if (ok()) {<br>    Footer footer;<br>    footer.set_metaindex_handle(metaindex_block_handle);<br>    footer.set_index_handle(index_block_handle);<br>    std::string footer_encoding;<br>    footer.EncodeTo(&amp;footer_encoding);<br>    r-&gt;status = r-&gt;file-&gt;Append(footer_encoding);<br>    if (r-&gt;status.ok()) {<br>      r-&gt;offset += footer_encoding.size();<br>    }<br>  }<br>  return r-&gt;status;<br>}<br><br>另外还有two_level_iterator.cc/.h与merger.cc/.h类。前者用于构造table上的迭代器，后者用于多个迭代器的归并。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;本节主要介绍sstable文件的格式及单个sstable文件的get/put。sstable文件全称是sorted string table，是一个有序且带索引的文件。&lt;/p&gt;
+&lt;p&gt;从前面的分析可知，level 0级的sstable文件是由内存中的immunable memtable经过minor compact形成的(也就是直接dump)，而level&amp;gt;0级的文件是由level-1级别的文件经过major compact形成的。关于compact过程，我们在后续章节分析。这里着重于分析单个sstable文件的相关接口，代码在table/目录。
+    
+    </summary>
+    
+      <category term="leveldb" scheme="http://www.petermao.com/categories/leveldb/"/>
+    
+    
+      <category term="源码分析" scheme="http://www.petermao.com/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
+    
+      <category term="leveldb" scheme="http://www.petermao.com/tags/leveldb/"/>
+    
+      <category term="存储" scheme="http://www.petermao.com/tags/%E5%AD%98%E5%82%A8/"/>
+    
+      <category term="sstable" scheme="http://www.petermao.com/tags/sstable/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>leveldb注释4–平台相关</title>
+    <link href="http://www.petermao.com/leveldb-4-port/"/>
+    <id>http://www.petermao.com/leveldb-4-port/</id>
+    <published>2013-07-07T03:10:20.000Z</published>
+    <updated>2017-02-20T12:38:38.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>0 编译<br>leveldb没有使用autoconf/automake来生成Makefile，而是自己编写了Makefile以及平台检测脚本。Makefile中会先调用检测脚本build_detect_platform，并将设置的环境变量保存在build_config.mk文件里。随后Makefile会include build_config.mk文件以进行编译，相关Makefile代码如下，其中的PLATFORM_CCFLAGS等参数将在build_detect_platform中设置并输出给build_config.mk文件：<a id="more"></a></p>
+<h2 id=""><a href="#" class="headerlink" title=""></a><pre></pre></h2><h1 id="detect-what-platform-we’re-building-on"><a href="#detect-what-platform-we’re-building-on" class="headerlink" title="detect what platform we’re building on"></a>detect what platform we’re building on</h1><p>$(shell CC=$(CC) CXX=$(CXX) TARGET_OS=$(TARGET_OS) \<br>    ./build_detect_platform build_config.mk ./)</p>
+<h1 id="this-file-is-generated-by-the-previous-line-to-set-build-flags-and-sources"><a href="#this-file-is-generated-by-the-previous-line-to-set-build-flags-and-sources" class="headerlink" title="this file is generated by the previous line to set build flags and sources"></a>this file is generated by the previous line to set build flags and sources</h1><p>include build_config.mk</p>
+<p>CFLAGS += -I. -I./include $(PLATFORM_CCFLAGS) $(OPT)<br>CXXFLAGS += -I. -I./include $(PLATFORM_CXXFLAGS) $(OPT)</p>
+<p>LDFLAGS += $(PLATFORM_LDFLAGS)</p>
+<h2 id="LIBS-PLATFORM-LIBS"><a href="#LIBS-PLATFORM-LIBS" class="headerlink" title="LIBS += $(PLATFORM_LIBS)"></a>LIBS += $(PLATFORM_LIBS)</h2><p><br>build_detect_platform脚本内部使用’uname -s’命令来检测类Unix/Linux操作系统的各版本并设置合适的变量(如CC/PLATFORM等变量，以及选择合适的底层平台文件，主要是port/port_posix.cc)，然后会依次检测编译环境中是否支持c++ 0x、snappy、tcmalloc，比如检测snappy是否安装的代码如下，对于snappy，若已安装，则会定义-DSNAPPY宏：</p>
+<p><pre></pre></p>
+<pre><code># Test whether Snappy library is installed
+# http://code.google.com/p/snappy/
+$CXX $CXXFLAGS -x c++ - -o /dev/null 2&gt;/dev/null  &lt;&lt;EOF
+  #include &lt;snappy.h&gt;
+  int main() {}
+</code></pre><p>EOF<br>    if [ “$?” = 0 ]; then<br>        COMMON_FLAGS=”$COMMON_FLAGS -DSNAPPY”<br>        PLATFORM_LIBS=”$PLATFORM_LIBS -lsnappy”<br>    fi<br><br>如果你想更进一步，连leveldb本身提供的Makefile都不想使用，你想将源代码集成进来，则只需要注意包含port/port_posix.cc文件或者其他合适的跨平台文件，以及定义合适的平台参数，比如对于POSIX环境，可简单的使用’-DLEVELDB_PLATFORM_POSIX’就可以编译。</p>
+<p>这里简单介绍了leveldb的编译过程，下面来看看其对平台的具体支持。</p>
+<p>leveldb大致通过3层来实现平台语义的支持。<br>第一层是对外接口，在env.cc/.h与mutexlock.h中实现，mutexlock.h提供了锁的上层接口，而env则主要提供了文件与线程操作的上层接口。这部分代码对于不同平台没有多大差别。主要定义了一个抽象接口。<br>第二层是文件与线程操作的实际实现，对于posix，则为env_posix.cc。<br>第三层则是一些原子操作的封装，比如信号、锁等。对于posix，对应的文件为port_posix.cc/.h。</p>
+<p>第一层：<br>Env：环境对象，提供文件、目录、线程等的操作接口。用户可自定义新Env对象，以加强对系统的控制；否则会使用默认的Env对象。对于posix，就是PosixEnv对象。<br>SequentialFile：顺序读文件<br>RandomAccessFile：随机读文件<br>WritableFile：顺序写文件<br>FileLock：文件锁</p>
+<p>第二层：<br>PosixSequentialFile是对SequentialFile接口的实现，也就是简单调用fread读文件。<br>posix的RandomAccessFile实现有两个，一个是PosixRandomAccessFile，另一个是PosixMmapReadableFile，前者调用pread读取指定偏移的文件数据，后者为使用mmap来读取文件。<br>PosixMmapFile是对WritableFile接口的实现，始终使用mmap来写文件。</p>
+<p>最终的PosixEnv对象通过调用这些子类来对外提供服务。对于随机读文件，在64位环境下，最多允许1000个文件使用mmap的方式，其他则使用pread方式。</p>
+<p>第三层：<br>利用C++的语言特性定义了Mutex、CondVar，以在使用过程中自动释放pthread_mutex_t、pthread_cond_t资源。另外，也提供了Snappy的操作接口：Snappy_Compress与Snappy_Uncompress。</p>
+<p>大部分代码并不复杂，这里就不一一分析了。</p>
+<p>helpers/memenv目录下实现了自定义的Env类 — InMemoryEnv，完全基于内存操作的Env对象，对自定义Env对象感兴趣的可了解下。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;0 编译&lt;br&gt;leveldb没有使用autoconf/automake来生成Makefile，而是自己编写了Makefile以及平台检测脚本。Makefile中会先调用检测脚本build_detect_platform，并将设置的环境变量保存在build_config.mk文件里。随后Makefile会include build_config.mk文件以进行编译，相关Makefile代码如下，其中的PLATFORM_CCFLAGS等参数将在build_detect_platform中设置并输出给build_config.mk文件：
+    
+    </summary>
+    
+      <category term="leveldb" scheme="http://www.petermao.com/categories/leveldb/"/>
+    
+    
+      <category term="源码分析" scheme="http://www.petermao.com/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
+    
+      <category term="leveldb" scheme="http://www.petermao.com/tags/leveldb/"/>
+    
+      <category term="存储" scheme="http://www.petermao.com/tags/%E5%AD%98%E5%82%A8/"/>
+    
+      <category term="leveldb env" scheme="http://www.petermao.com/tags/leveldb-env/"/>
+    
+      <category term="leveldb port_posix" scheme="http://www.petermao.com/tags/leveldb-port-posix/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>leveldb注释3–基础类</title>
+    <link href="http://www.petermao.com/leveldb-3-util/"/>
+    <id>http://www.petermao.com/leveldb-3-util/</id>
+    <published>2013-07-06T21:29:40.000Z</published>
+    <updated>2017-02-20T12:38:38.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>这一节主要分析下util目录下的代码。这部分代码相对独立，功能明确，很容易看明白。可先尝试理解这部分代码，以为进一步理解leveldb代码打下基础。</p>
+<p>1    内存管理(arena.cc/.h)<a id="more"></a><br>leveldb的大部分内存管理依赖于C++语言的默认实现，也就是不对内存进行管理。只是在memtable的实现中用到了一个简单的内存管理器(arena)。因为memtable的内部实现skip list写入时，需要分配新节点，大量节点的直接分配可能会带来较多的碎片，影响运行效率。因此，leveldb在每个memtable中都会绑定一个arena，在memtable进行minor compact后，memtable销毁时进行统一释放。<br>下图是一个arena某个运行时刻的截图。从图中可以看出，arena内部使用的基本块大小为4K，已分配的块的指保存在一个vector中。具体分配策略如下。若分配的内存可从剩余的块中分配，则直接从剩余块中分配并调整剩余块指针的位置。否则检查要分配的size是否大于1/4的block(也就是1K)，若大于则直接new所需大小的内存，将指针保存在vector中并返回内存指针。从这里可以看出，vector保存的内存块的指针大小可能&gt;4K，也就是对大内存块直接分配。前面两个条件若都不满足，则需要new一个基本块(=4K)，将new出来的新块作为当前块，从这块当中分配内存并调整当前内存指针位置。原来当前块的剩余内存就被浪费掉了。<br>实际中可考虑用tcmalloc/jemalloc以提升内存管理效率。<br>[caption id=”attachment_670” align=”alignnone” width=”599” caption=”leveldb arena”]<a href="http://www.petermao.com/wp-content/uploads/2013/10/leveldb-arena.png"><img src="http://www.petermao.com/wp-content/uploads/2013/10/leveldb-arena.png" alt="leveldb arena" title="leveldb arena"></a>[/caption]</p>
+<pre>
+  // alloc_ptr_指向基本块空闲内存位置，alloc_bytes_remaining_为剩余内存大小
+  // blocks_保存了所有的块，包括了基本块与直接分配的大块
+  // Allocation state
+  char* alloc_ptr_;
+  size_t alloc_bytes_remaining_;
+
+  // Array of new[] allocated memory blocks
+  std::vector<char*> blocks_;
+
+  // Bytes of memory in blocks allocated so far
+  size_t blocks_memory_;
+</char*></pre>
+
+<p>2 过滤器bloom filter的实现(bloom.cc)<br>leveldb通过接口NewBloomFilterPolicy提供了一个filter的实现，使用时通过传入该filter可提升对不存在的数查找时的效率。open db时的options.filter_policy参数指定该filter。如果指定了filter，leveldb会在生成新sst文件时对该文件的所有key构造一个合适的bloom filter字符串并保存在sst文件中。现在我们来看看这个bloom filter的实现机制。bloom filter需要指定bits_per_key参数，表示每个key需要检测多少个bit位/保存多少个bit位。创建bloom filter的核心代码如下：</p>
+<pre>
+  virtual void CreateFilter(const Slice* keys, int n, std::string* dst) const {
+    // Compute bloom filter size (in both bits and bytes)
+    size_t bits = n * bits_per_key_;
+
+    // For small n, we can see a very high false positive rate.  Fix it
+    // by enforcing a minimum bloom filter length.
+    if (bits < 64) bits = 64;
+
+    size_t bytes = (bits + 7) / 8;
+    bits = bytes * 8;
+
+    const size_t init_size = dst->size();
+    dst->resize(init_size + bytes, 0);
+    // 将探测需要的尾数放至最后
+    dst->push_back(static_cast<char>(k_));  // Remember # of probes in filter
+    char* array = &(*dst)[init_size];
+    for (size_t i = 0; i < n; i++) {
+      // Use double-hashing to generate a sequence of hash values.
+      // See analysis in [Kirsch,Mitzenmacher 2006].
+      uint32_t h = BloomHash(keys[i]);
+      const uint32_t delta = (h >> 17) | (h << 15);  // Rotate right 17 bits
+      for (size_t j = 0; j < k_; j++) {
+        const uint32_t bitpos = h % bits;
+        array[bitpos/8] |= (1 << (bitpos % 8));
+        h += delta;
+      }
+    }
+</char></pre>
+创建时，先预留bloom filter所需空间(n * bits_per_key_/8对齐后)，并将需要检测的位数保存至字符串末尾，以方便使用时解出。然后遍历key，计算其hash值，将hash值所对应的bit位置1(需要设置bits_per_key_次，并且后续的bit位从原始的hash值右移17位得到)。过滤函数KeyMayMatch基本就是上述过程的逆过程。bloom filter字符串的内部结构可如下图所示。
+[caption id="attachment_677" align="alignnone" width="684" caption="leveldb bloomfilter结构"][![leveldb bloomfilter结构](http://www.petermao.com/wp-content/uploads/2013/10/leveldb-bloom.png "leveldb bloomfilter结构")](http://www.petermao.com/wp-content/uploads/2013/10/leveldb-bloom.png)[/caption]
+
+3 默认的cache机制---LRU实现(cache.cc/.h)
+leveldb的cache主要是为了加快get操作的性能。cache分为block cache与table cache。table cache针对sst文件，key是file_number，cache的大小为options.max_open_files - 10，在db初始化时创建，且cache机制使用默认的LRU算法，外部没法更改。
+<pre>
+  // Reserve ten files or so for other uses and give the rest to TableCache.
+  const int table_cache_size = options.max_open_files - 10;
+  table_cache_ = new TableCache(dbname_, &options_, table_cache_size);
+</pre>
+而block_cache则可以在open时通过options.block_cache参数指定cache实例。外部可自定义合适的cache机制替换系统自带的LRU cache。如果外部没有提供block_cache参数，则leveldb会在初始化时构造8MB大小的cache，该cache同样是LRU cache的实例。该cache的key是block所属table文件的一个cache_id + block在文件中的偏移。
+<pre>
+  // 没有提供block_cache，则内部使用8MB的LRUCache
+  if (result.block_cache == NULL) {
+    result.block_cache = NewLRUCache(8 << 20);
+  }
+</pre>
+<pre>
+      char cache_key_buffer[16];
+      EncodeFixed64(cache_key_buffer, table->rep_->cache_id);
+      EncodeFixed64(cache_key_buffer+8, handle.offset());
+      Slice key(cache_key_buffer, sizeof(cache_key_buffer));
+      cache_handle = block_cache->Lookup(key);
+</pre>
+如果用户想自定义block_cache算法，则可参考cache.h中Cache类所定义的抽象接口，主要接口代码如下所示。可以看出，也就是key的增删查改以及句柄的释放。
+<pre>
+  // When the inserted entry is no longer needed, the key and
+  // value will be passed to "deleter".
+  virtual Handle* Insert(const Slice& key, void* value, size_t charge,
+                         void (*deleter)(const Slice& key, void* value)) = 0;
+
+  // If the cache has no mapping for "key", returns NULL.
+  //
+  // Else return a handle that corresponds to the mapping.  The caller
+  // must call this->Release(handle) when the returned mapping is no
+  // longer needed.
+  virtual Handle* Lookup(const Slice& key) = 0;
+
+  // Release a mapping returned by a previous Lookup().
+  // REQUIRES: handle must not have been released yet.
+  // REQUIRES: handle must have been returned by a method on *this.
+  virtual void Release(Handle* handle) = 0;
+
+  // Return the value encapsulated in a handle returned by a
+  // successful Lookup().
+  // REQUIRES: handle must not have been released yet.
+  // REQUIRES: handle must have been returned by a method on *this.
+  virtual void* Value(Handle* handle) = 0;
+
+  // If the cache contains entry for key, erase it.  Note that the
+  // underlying entry will be kept around until all existing handles
+  // to it have been released.
+  virtual void Erase(const Slice& key) = 0;
+
+  // Return a new numeric id.  May be used by multiple clients who are
+  // sharing the same cache to partition the key space.  Typically the
+  // client will allocate a new id at startup and prepend the id to
+  // its cache keys.
+  virtual uint64_t NewId() = 0;
+</pre>
+NewLRUCache函数可调用自带的LRU实现。现在我们来看看LRU的具体实现。下图是LRUCache的内部实现图与相关代码。
+[caption id="attachment_683" align="alignnone" width="471" caption="单个LRUCache"][![单个LRUCache](http://www.petermao.com/wp-content/uploads/2013/10/leveldb单个LRUCache.png "leveldb单个LRUCache")](http://www.petermao.com/wp-content/uploads/2013/10/leveldb单个LRUCache.png)[/caption]
+<pre>
+struct LRUHandle {
+  void* value;
+  void (*deleter)(const Slice&, void* value);
+  LRUHandle* next_hash; // hash链表指针
+  LRUHandle* next;       // 循环链表指针
+  LRUHandle* prev;
+  size_t charge;      // TODO(opt): Only allow uint32_t?
+  size_t key_length;
+  uint32_t refs;
+  uint32_t hash;      // Hash of key(); used for fast sharding and comparisons
+  char key_data[1];   // Beginning of key
+--
+};
+class HandleTable {
+  ---
+  uint32_t length_;
+  uint32_t elems_;
+  LRUHandle** list_;
+  ---
+};
+
+class LRUCache {
+  ---
+  // Initialized before use.
+  size_t capacity_;
+  ---
+  // Dummy head of LRU list.
+  // lru.prev is newest entry, lru.next is oldest entry.
+  LRUHandle lru_;
+  HandleTable table_;
+};
+
+static const int kNumShardBits = 4;
+static const int kNumShards = 1 << kNumShardBits;
+class ShardedLRUCache : public Cache {
+  ---
+  LRUCache shard_[kNumShards];
+  --
+};
+</pre>
+每个节点有3个指针，一个指针用于hash table的单链接指向。另外两个形成双向循环链表，以实现lru功能，方便控制cache的大小。插入时除了在hash table中查找合适的位置并插入，还需要插入到循环链表的开头。如果数据过多，就通过head来删除最老的节点。对于table，插入的元素个数大于桶的数目时，需要重新调整大小，新的size将是2的幂，但比元素个数多。
+leveldb为了加快查找速度，并不只是使用了1个如上所示的LRUCache，而是16个(也就是说会按key再分一次桶)，最终调用的是ShardedLRUCache接口。
+
+4 内部编码/解析器(coding.cc/.h)
+leveldb为了节省空间，可对int进行可变长度编码，也就是对小于2^7使用1个字节存储，小于2^14使用两个字节。。。。编码时将输入每隔7位分组，将字节的最高位始终置1，一直到最后1个字节的最高位置0表示结束。比如对int型的二进制数00000000,00000001,11011001,01000110，每隔7位分组则为111,0110010,1000110，再将每个字节的高位置1，则实际存储的为00000111,10110010,11000110。这样比起始终用4个字节存储，省了1个字节的存储空间。实际的编码代码如下：
+<pre>
+char* EncodeVarint32(char* dst, uint32_t v) {
+  // Operate on characters as unsigneds
+  unsigned char* ptr = reinterpret_cast<unsigned char*="">(dst);
+  static const int B = 128;
+  if (v < (1<<7)) {="" *(ptr++)="v;" }="" else="" if="" (v="" <="" (1<<14))="" |="" b;="">>7;
+  } else if (v < (1<<21)) {="" *(ptr++)="v" |="" b;="">>7) | B;
+    *(ptr++) = v>>14;
+  } else if (v < (1<<28)) {="" *(ptr++)="v" |="" b;="">>7) | B;
+    *(ptr++) = (v>>14) | B;
+    *(ptr++) = v>>21;
+  } else {
+    *(ptr++) = v | B;
+    *(ptr++) = (v>>7) | B;
+    *(ptr++) = (v>>14) | B;
+    *(ptr++) = (v>>21) | B;
+    *(ptr++) = v>>28;
+  }
+  return reinterpret_cast<char*>(ptr);
+</char*></28))></21))></7))></unsigned></pre>
+
+<p>5 默认比较器的实现—字节级比较器<br>由于leveldb内部是有序的，因此其比较器是至关重要的。头文件中的Comparator类提供了比较器的抽象接口。Name定义了该比较器的名字，会在open时进行检查。至于FindShortestSeparator、FindShortSuccessor表示什么意思，可参看默认的字节级比较器BytewiseComparator的实现，相当简单。</p>
+<pre>
+  // Three-way comparison.  Returns value:
+  //   < 0 iff "a" < "b",
+  //   == 0 iff "a" == "b",
+  //   > 0 iff "a" > "b"
+  virtual int Compare(const Slice& a, const Slice& b) const = 0;
+
+  // The name of the comparator.  Used to check for comparator
+  // mismatches (i.e., a DB created with one comparator is
+  // accessed using a different comparator.
+  //
+  // The client of this package should switch to a new name whenever
+  // the comparator implementation changes in a way that will cause
+  // the relative ordering of any two keys to change.
+  //
+  // Names starting with "leveldb." are reserved and should not be used
+  // by any clients of this package.
+  virtual const char* Name() const = 0;
+
+  // Advanced functions: these are used to reduce the space requirements
+  // for internal data structures like index blocks.
+
+  // If *start < limit, changes *start to a short string in [start,limit).
+  // Simple comparator implementations may return with *start unchanged,
+  // i.e., an implementation of this method that does nothing is correct.
+  virtual void FindShortestSeparator(
+      std::string* start,
+      const Slice& limit) const = 0;
+
+  // Changes *key to a short string >= *key.
+  // Simple comparator implementations may return with *key unchanged,
+  // i.e., an implementation of this method that does nothing is correct.
+  virtual void FindShortSuccessor(std::string* key) const = 0;
+</pre>
+
+<p>未完待续</p>
+<p>6 crc32</p>
+<p>7 hash</p>
+<p>8 histogram</p>
+<p>9 logging.cc</p>
+<p>10 random.h</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;这一节主要分析下util目录下的代码。这部分代码相对独立，功能明确，很容易看明白。可先尝试理解这部分代码，以为进一步理解leveldb代码打下基础。&lt;/p&gt;
+&lt;p&gt;1    内存管理(arena.cc/.h)
+    
+    </summary>
+    
+      <category term="leveldb" scheme="http://www.petermao.com/categories/leveldb/"/>
+    
+    
+      <category term="源码分析" scheme="http://www.petermao.com/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
+    
+      <category term="leveldb" scheme="http://www.petermao.com/tags/leveldb/"/>
+    
+      <category term="存储" scheme="http://www.petermao.com/tags/%E5%AD%98%E5%82%A8/"/>
+    
+      <category term="leveldb arena" scheme="http://www.petermao.com/tags/leveldb-arena/"/>
+    
+      <category term="leveldb bloom filter" scheme="http://www.petermao.com/tags/leveldb-bloom-filter/"/>
+    
+      <category term="leveldb cache" scheme="http://www.petermao.com/tags/leveldb-cache/"/>
+    
+      <category term="leveldb coding" scheme="http://www.petermao.com/tags/leveldb-coding/"/>
+    
+      <category term="leveldb comparator" scheme="http://www.petermao.com/tags/leveldb-comparator/"/>
+    
+      <category term="leveldb crc32" scheme="http://www.petermao.com/tags/leveldb-crc32/"/>
+    
+      <category term="leveldb hash" scheme="http://www.petermao.com/tags/leveldb-hash/"/>
+    
+      <category term="leveldb skiplist" scheme="http://www.petermao.com/tags/leveldb-skiplist/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>leveldb注释1--整体介绍</title>
+    <link href="http://www.petermao.com/leveldb-1-overview/"/>
+    <id>http://www.petermao.com/leveldb-1-overview/</id>
+    <published>2013-07-05T00:31:58.000Z</published>
+    <updated>2017-02-20T12:38:38.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>概括的说，leveldb是一个kv型的存储库。主要特点如下：</p>
+<blockquote>
+<p>单机嵌入式接口<br>持久化存储<br>KV系统，提供读写删除操作(kv都是字节序列)<br>支持快照功能，使得读操作不受写操作影响<br>磁盘上的数据是有序的，且分级存储，同时在文件保存相应的索引以加速读操作<br>删除是一种特殊类型的写操作<br>提供压缩操作以减少存储空间<br>写入，延迟写入，通过log保证数据不丢失</p>
+</blockquote>
+<p>整体架构如下图所示：<a id="more"></a></p>
+<p>[caption id=”attachment_597” align=”alignnone” width=”703” caption=”leveldb整体结构”]<a href="http://www.petermao.com/wp-content/uploads/2013/10/leveldb整体结构4.png"><img src="http://www.petermao.com/wp-content/uploads/2013/10/leveldb整体结构4.png" alt="leveldb整体结构" title="leveldb整体结构"></a>[/caption]</p>
+<p>为了支持kv型的读写删除操作，leveldb在内存与磁盘中分别用了一些数据结构/数据文件。从上图可以看出，内存中主要有memtable与immutable memtable，而磁盘上主要有CURRENT、MANIFEST、.log、LOCK、LOG以及分级的.sst等文件。</p>
+<p>内存中的memtable与immutable table本质上都是一个skip list，保存当前写入内存而未持久化至磁盘的数据。对于特定的db来讲，一开始只有一个memtable，当memtable写入操作超过阈值(或者对应的.log文件超过阈值时)后，会转化为immutable memtable。同时会产生新的memtable以供后续数据插入。而immutable memtable是只能读不能写的。</p>
+<p>磁盘上的LOCK文件锁住当前db。LOG文件是leveldb运行过程中产生的一些日志(注意跟.log文件区分)。.log文件则跟memtable配合，保存未持久化的写操作，以防运行过程中程序异常导致数据丢失。sst文件保存了最终的数据。随着压缩的进行，会产生不同level的sst文件。为了描述这些sst文件，比如level0有哪些文件，对应的key-range范围，则有相应的MANIFEST文件。而CURRENT文件则指向描述db最新状态信息的MANIFEST。因为leveldb支持version与snapshot机制，随着leveldb的运行，会不断的增删sst数据文件，原有的描述文件可能仍在使用，而CURRENT指向的MANIFEST则始终表示最新的描述文件。</p>
+<p>再来看看leveldb运行过程中的主要操作。<br>先来看写入操作(put)。从架构图可以看出，leveldb会先将写入操作写至.log文件，写入成功后再写入memtable。由于写log是追加写，而写memtable是skip list的内存操作，因此leveldb的写是相当快的。</p>
+<p>对于读操作(get)来讲，主要分为3步。先查memtable，没有找到则在immutable memtable中继续查找；若还没有找到，则表示对应的key-value数据可能已持久化至磁盘中，因此需要借助MANIFEST文件来找到对应的sst文件，然后再在对应的sst文件中查找。由于MANIFEST文件常驻内存，而MANIFEST保存了不同sst文件的key-range，因此查找对应的文件是很快的。找到对应的文件后，由于sst文件内部是有序的，并且有相应的索引索引不同key-range的value，因此需要先读入这些索引，再在索引中二分查找，再根据索引找到对应的块，然后遍历相应的块查找。这个过程可能需要两次大范围的读文件操作。一次是读索引，一次是读对应的block。为了加快这个操作，leveldb有相应的table cache与block cache，以分别加速sst文件与block的读操作。另外有些数据可能在db中就不存在，为了加速这些数据的查找，每个sst文件都可以添加合适的bloom filter。bloom filter是在载入相应的sst文件后对数据进行过滤的。</p>
+<p>最后来看看压缩(compact)操作。leveldb的压缩操作分为minor compact与major compact。所有的压缩操作都是启动一个新线程来完成的。从架构图可以看出，minor compact就是遍历immutable memtable(本质上是一个skip list)，dump至一个新的level0 sst文件。从这里可以看出，新dump出来的sst文件可能会跟已有的level0级别的sst文件存在key-range上的重叠。而level[1-6]上的sst文件则不会存在这个这个问题，level[1-6]上的文件是由上一级文件进行major compact得到的。当level 0层文件数超过阈值(&gt;=4)，会触发level0与level1层文件合并。而对于大于等于level1以上的level，总文件字节数超过阈值(10M 100M 1G 10G 100G 1T(level=6))则会触发该操作。至于选择哪个文件与下一级别的文件进行compact，则是轮流进行的。另外如果特定level文件的seek次数(也就是访问次数)超过阈值，也会触发对应的major compact操作，此时则会直接选择该文件与下一level进行major compact操作。</p>
+<p>后续我们将先分析内存与磁盘上的数据结构/文件格式代码，再分析GET/PUT等操作对应代码。在此之前，我们看看leveldb源代码的目录结构。<br>doc/: 包括了一些文档，<br>&gt; benchmark.html             性能测试文档<br>&gt; impl.html                                  内部实现文档<br>&gt; index.html                              使用文档<br>&gt; log_format.html             .log文件格式<br>&gt; table_format.html      .sst文件格式</p>
+<p>helpers/:提供了一个简单的内存文件操作接口，相当于实现了一个Env接口。Env接口对应了leveldb运行的底层平台。<br>include/leveldb/:对外接口，使用时include该目录下的头文件即可。<br>&gt; cache.h                 cache接口，用户可实现合适的cache接口，以加速读操作<br>&gt; c.h                       leveldb是用c++编写的，这里提供了c的对外封装<br>&gt; comparator.h<br>db.h<br>env.h<br>filter_policy.h<br>iterator.h<br>options.h<br>slice.h<br>status.h<br>table_builder.h<br>table.h<br>write_batch.h</p>
+<p>util/:<br>&gt; arena<br>&gt; bloom<br>&gt; cache<br>&gt; coding<br>&gt; comparator<br>&gt; crc32c<br>&gt; env<br>&gt; env_posix<br>&gt; filter_policy<br>&gt; hash<br>&gt; histogram<br>&gt; logging<br>&gt; mutexlock<br>&gt; options<br>&gt; posix_logger<br>&gt; random<br>&gt; status<br>&gt; testharness<br>&gt; testutil</p>
+<p>port/:<br>&gt; atomic_pointer<br>&gt; port_example<br>&gt; port<br>&gt; port_posix<br>&gt; README<br>&gt; thread_annotations</p>
+<p>table/: sst table相关操作的封装<br>&gt; block_builder<br>&gt; block<br>&gt; filter_block<br>&gt; format<br>&gt; iterator<br>&gt; iterator_wrapper<br>&gt; merger<br>&gt; table_builder<br>&gt; table<br>&gt; two_level_iterator</p>
+<p>db/:leveldb主要操作的实现部分<br>&gt; builder<br>&gt; c<br>&gt; db_bench<br>&gt; dbformat<br>&gt; db_impl<br>&gt; db_iter<br>&gt; filename<br>&gt; log_format<br>&gt; log_reader<br>&gt; log_writer<br>&gt; memtable<br>&gt; repair<br>&gt; skiplist<br>&gt; snapshot<br>&gt; table_cache<br>&gt; version_edit<br>&gt; version_set<br>&gt; write_batch<br>&gt; write_batch_internal</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;概括的说，leveldb是一个kv型的存储库。主要特点如下：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;单机嵌入式接口&lt;br&gt;持久化存储&lt;br&gt;KV系统，提供读写删除操作(kv都是字节序列)&lt;br&gt;支持快照功能，使得读操作不受写操作影响&lt;br&gt;磁盘上的数据是有序的，且分级存储，同时在文件保存相应的索引以加速读操作&lt;br&gt;删除是一种特殊类型的写操作&lt;br&gt;提供压缩操作以减少存储空间&lt;br&gt;写入，延迟写入，通过log保证数据不丢失&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;整体架构如下图所示：
+    
+    </summary>
+    
+      <category term="leveldb" scheme="http://www.petermao.com/categories/leveldb/"/>
+    
+    
+      <category term="源码分析" scheme="http://www.petermao.com/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
+    
+      <category term="leveldb" scheme="http://www.petermao.com/tags/leveldb/"/>
+    
+      <category term="存储" scheme="http://www.petermao.com/tags/%E5%AD%98%E5%82%A8/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>leveldb注释0--start</title>
+    <link href="http://www.petermao.com/leveldb-0-start/"/>
+    <id>http://www.petermao.com/leveldb-0-start/</id>
+    <published>2013-07-04T17:23:24.000Z</published>
+    <updated>2017-02-20T12:38:38.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>因为工作需要，曾对leveldb进行过测试与实际使用，而对leveldb的源代码进行学习，则纯粹是出于一个码农对美好世界进行探究的好奇。接下来将尽可能从源代码上给出leveldb代码的详尽注释，这里先列出自己在阅读前后的主要参考。<a id="more"></a></p>
+<p>0 官方文档<br><a href="http://leveldb.googlecode.com/svn/trunk/" target="_blank" rel="external">http://leveldb.googlecode.com/svn/trunk/</a><br>源代码，主要使用了1.7.0版本<br><a href="https://leveldb.googlecode.com/files/leveldb-1.7.0.tar.gz" target="_blank" rel="external">https://leveldb.googlecode.com/files/leveldb-1.7.0.tar.gz</a></p>
+<p><a href="http://leveldb.googlecode.com/svn/trunk/doc/index.html" target="_blank" rel="external">http://leveldb.googlecode.com/svn/trunk/doc/index.html</a><br>官方使用手册，比较详细</p>
+<p><a href="http://leveldb.googlecode.com/svn/trunk/doc/benchmark.html" target="_blank" rel="external">http://leveldb.googlecode.com/svn/trunk/doc/benchmark.html</a><br>官方的性能测试</p>
+<p><a href="http://leveldb.googlecode.com/svn/trunk/doc/impl.html" target="_blank" rel="external">http://leveldb.googlecode.com/svn/trunk/doc/impl.html</a><br>比较粗略的介绍了leveldb的主要实现细节</p>
+<p><a href="http://leveldb.googlecode.com/svn/trunk/doc/table_format.txt" target="_blank" rel="external">http://leveldb.googlecode.com/svn/trunk/doc/table_format.txt</a><br><a href="http://leveldb.googlecode.com/svn/trunk/doc/log_format.txt" target="_blank" rel="external">http://leveldb.googlecode.com/svn/trunk/doc/log_format.txt</a><br>sstable文件格式与log文件格式</p>
+<p>1 原理<br>【朗格科技】LevelDb日知录系列   <a href="http://www.samecity.com/blog/Index.asp?SortID=12" target="_blank" rel="external">http://www.samecity.com/blog/Index.asp?SortID=12</a><br>数据分析与处理之二（Leveldb 实现原理）<br><a href="http://www.cnblogs.com/haippy/archive/2011/12/04/2276064.html" target="_blank" rel="external">http://www.cnblogs.com/haippy/archive/2011/12/04/2276064.html</a><br>比较详尽的介绍了leveldb各模块的工作原理与实现细节，缺点是没有源代码细节。对leveldb最初细节的了解，也起于该文。建议读者可先阅读此文，以对leveldb的原理有最初的印象。另外，作者似乎没有把该系列写完。</p>
+<p>leveldb实现解析.pdf<br>从代码细节上进行了分析，不过对于初接触者恐怕容易陷入过多的细节，缺乏整体性的介绍。建议对原理有了大致了解，且初读代码后，再进行对照学习。</p>
+<p>2 性能<br>关于LevelDB <a href="http://blog.sina.com.cn/s/blog_593af2a70100ztjn.html" target="_blank" rel="external">http://blog.sina.com.cn/s/blog_593af2a70100ztjn.html</a></p>
+<p>LevelDB 写操作出现停顿的问题分析 <a href="http://www.ideawu.net/blog/archives/709.html" target="_blank" rel="external">http://www.ideawu.net/blog/archives/709.html</a></p>
+<p>Performance data for LevelDB, Berkley DB and BangDB for Random Operations<br><a href="http://highscalability.com/blog/2012/11/29/performance-data-for-leveldb-berkley-db-and-bangdb-for-rando.html" target="_blank" rel="external">http://highscalability.com/blog/2012/11/29/performance-data-for-leveldb-berkley-db-and-bangdb-for-rando.html</a></p>
+<p>leveldb与kyoto cabinet性能测试<br><a href="http://blog.creapptives.com/post/8330476086/leveldb-vs-kyoto-cabinet-my-findings" target="_blank" rel="external">http://blog.creapptives.com/post/8330476086/leveldb-vs-kyoto-cabinet-my-findings</a></p>
+<p>3 相关实现<br>go实现  <a href="https://code.google.com/p/leveldb-go" target="_blank" rel="external">https://code.google.com/p/leveldb-go</a></p>
+<p>Tair ldb(LevelDB)原理与应用案例.pdf</p>
+<p>leveldb+redis  <a href="https://github.com/qiye/redis-storage" target="_blank" rel="external">https://github.com/qiye/redis-storage</a><br>ssdb <a href="https://github.com/ideawu/ssdb" target="_blank" rel="external">https://github.com/ideawu/ssdb</a><br>sophia <a href="https://github.com/pmwkaa/sophia" target="_blank" rel="external">https://github.com/pmwkaa/sophia</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;因为工作需要，曾对leveldb进行过测试与实际使用，而对leveldb的源代码进行学习，则纯粹是出于一个码农对美好世界进行探究的好奇。接下来将尽可能从源代码上给出leveldb代码的详尽注释，这里先列出自己在阅读前后的主要参考。
+    
+    </summary>
+    
+      <category term="leveldb" scheme="http://www.petermao.com/categories/leveldb/"/>
+    
+    
+      <category term="源码分析" scheme="http://www.petermao.com/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
+    
+      <category term="leveldb" scheme="http://www.petermao.com/tags/leveldb/"/>
+    
+      <category term="存储" scheme="http://www.petermao.com/tags/%E5%AD%98%E5%82%A8/"/>
     
   </entry>
   
   <entry>
     <title>使用v8识别js重定向</title>
-    <link href="http://www.petermao.com/%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E/v8-js-redirect/"/>
-    <id>http://www.petermao.com/搜索引擎/v8-js-redirect/</id>
+    <link href="http://www.petermao.com/v8-js-redirect/"/>
+    <id>http://www.petermao.com/v8-js-redirect/</id>
     <published>2013-06-09T01:11:36.000Z</published>
-    <updated>2017-02-14T02:02:51.000Z</updated>
+    <updated>2017-02-21T05:59:26.000Z</updated>
     
     <content type="html"><![CDATA[<p>一 重定向<br>爬虫抓取的过程中，遇到重定向时需要识别出重定向后的url。<br>总结下，主要有如下3类重定向：<br>1   http协议的3XX<br>301  永久移动<br>302  临时<br>305  必须通过指定定代理才能访问相应资源<br>307  临时<a id="more"></a></p>
-<p>比如 访问<a href="http://www.meilishuo.com/，响应如下" target="_blank" rel="external">http://www.meilishuo.com/，响应如下</a></p>
-<pre>
-HTTP/1.1 301 Moved Permanently
-Server: mls/1.1
-Date: Mon, 01 Jul 2013 07:19:15 GMT
-Transfer-Encoding: chunked
-Connection: keep-alive
-Location: /welcome
-Cache-Control: no-cache,must-revalidate,no-store
-Pragma: no-cache
-</pre>
-
-<p>2   html的meta字段<br>meta字段的refresh属性</p>
-<pre>
-<html>
-<meta http-equiv="refresh" content="1; url=http://www.petermao.com">
-<body>
-</body></html>
-</pre>
-
-<p>3   js重定向<br>有好几种，后面总结下，这里给个简单例子：</p>
-<pre>
-<html><body>
-<script type="text/javascript">window.open("http://www.petermao.com")
-</script>
-</body></html>
-</pre>
-
+<p>比如 访问<a href="http://www.meilishuo.com/，响应如下" target="_blank" rel="external">http://www.meilishuo.com/，响应如下</a><br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">HTTP/1.1 301 Moved Permanently</div><div class="line">Server: mls/1.1</div><div class="line">Date: Mon, 01 Jul 2013 07:19:15 GMT</div><div class="line">Transfer-Encoding: chunked</div><div class="line">Connection: keep-alive</div><div class="line">Location: /welcome</div><div class="line">Cache-Control: no-cache,must-revalidate,no-store</div><div class="line">Pragma: no-cache</div></pre></td></tr></table></figure></p>
+<p>2   html的meta字段<br>meta字段的refresh属性<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"refresh"</span> <span class="attr">content</span>=<span class="string">"1; url=http://www.petermao.com"</span> /&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p>3   js重定向<br>有好几种，后面总结下，这里给个简单例子：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span><span class="tag">&lt;<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">'text/javascript'</span>&gt;</span><span class="undefined">window.open("http://www.petermao.com")</span></div><div class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure></p>
 <p>解决方案：<br>第一种在获得http首部后，根据状态码，就可以判断是否重定向，再根据location属性来获取重定后的url。</p>
 <p>第二种已经获得了网页内容。一般是是通过正则匹配出meta，refresh以及content属性，再获取重定向后的url。当然也可以进行dom解析，正确性会好点，但可能会存在性能问题，个人感觉没有这个必要。正则匹配即可。</p>
 <p>第三种是难点。我们先来看看js重定向有哪些表现形式。</p>
 <p>二   JS重定向分类<br>主要有如下几类，这里得到了朋友@秋声落叶的帮助，欢迎其他朋友补充。<br>1   window：<br>window.open(url)</p>
-<p>2   location属性：</p>
-<pre>
-location=url;
-location.href=url;
-window.location=url;
-document.location=url;
-window.location.href=url;
-window.location.replace(url)
-window.location.assign(url)
-location.replace(url);
-location.assign(url);
-self.location=url;
-top.location=url;
-</pre>
-
-<p>3   navigate方法：</p>
-<pre>
-window.navigate(url)
-top.navigate(url);
-</pre>
-
-<p>4   document+meta字段</p>
-<pre>
-document.write('<meta http-equiv="refresh" content="0;url=http://www.petermao.com">');
-document.writeIn('<meta http-equiv="refresh" content="0;url=http://www.petermao.com">');
-document.close();
-</pre>
-
-<p>三   JS重定向识别的1个思路<br>1   问题<br>要识别前面的重定向，通过正则可能不现实，比如前面的JS可以封装在函数里，通过变量来传递重定向后的url。比如前面的location的变种：</p>
-<pre>
-<html>
-<head>
-<script type="text/javascript">
-function AutoRedirect(seconds,redirectUrl){
-setTimeout("Redirect('"+redirectUrl+"')",seconds);}
-function Redirect(redirectUrl){
-location.href=redirectUrl;
-}
-</script>
-</head>
-<body>
-<script type="text/javascript">AutoRedirect(2, 'http://www.petermao.com');
-</script></body></html>
-</pre>
-
+<p>2   location属性：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">location=url;</div><div class="line">location.href=url;</div><div class="line">window.location=url;</div><div class="line">document.location=url;</div><div class="line">window.location.href=url;</div><div class="line">window.location.replace(url)</div><div class="line">window.location.assign(url)</div><div class="line">location.replace(url);</div><div class="line">location.assign(url);</div><div class="line">self.location=url;</div><div class="line">top.location=url;</div></pre></td></tr></table></figure></p>
+<p>3   navigate方法：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">window.navigate(url)</div><div class="line">top.navigate(url);</div></pre></td></tr></table></figure></p>
+<p>4   document+meta字段<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">document.write('<span class="tag">&lt;<span class="name">META</span> <span class="attr">HTTP-EQUIV</span>=<span class="string">"refresh"</span> <span class="attr">content</span>=<span class="string">"0;url=http://www.petermao.com"</span>&gt;</span>');</div><div class="line">document.writeIn('<span class="tag">&lt;<span class="name">META</span> <span class="attr">HTTP-EQUIV</span>=<span class="string">"refresh"</span> <span class="attr">content</span>=<span class="string">"0;url=http://www.petermao.com"</span>&gt;</span>');</div><div class="line">document.close();</div></pre></td></tr></table></figure></p>
+<p>三   JS重定向识别的1个思路<br>1   问题<br>要识别前面的重定向，通过正则可能不现实，比如前面的JS可以封装在函数里，通过变量来传递重定向后的url。比如前面的location的变种：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">'text/javascript'</span>&gt;</span><span class="undefined"></span></div><div class="line">function AutoRedirect(seconds,redirectUrl)&#123;</div><div class="line">setTimeout("Redirect('"+redirectUrl+"')",seconds);&#125;</div><div class="line">function Redirect(redirectUrl)&#123;</div><div class="line">location.href=redirectUrl;</div><div class="line">&#125;</div><div class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">'text/javascript'</span>&gt;</span><span class="undefined">AutoRedirect(2, 'http://www.petermao.com');</span></div><div class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span><span class="tag">&lt;/<span class="name">body</span>&gt;</span><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure></p>
 <p>此时要获得这些JS，只能通过完整的解析了，基于DOM树可以完整的获取这些JS。将script当作html的一个标签即可。<br>在完整获得这些JS后，怎么知道其实际表示什么内容了？这个就需要JS运行环境了。可以考虑开源的V8与SpiderMonkey了。（本文只考虑V8）。</p>
 <p>2  使用V8的问题<br>不过这里有个问题，对于在浏览器中运行的html网页，浏览器会提供1个叫做window的全局对象，像location、top等对象，以及settimeout等函数就是window的子属性/方法，而这个window的实现被封装在BOM模型（浏览器对象模型）中，该模型不像DOM、JS那样有统一的标准。V8只提供JS运行环境，像window等对象是由浏览器内核提供的，比如webkit中有BOM的实现。之前曾短暂研究过webkit，不过这货太过复杂，还未入门，抽取其中的库来解析与运行网页，不知道是否可行，有研究的朋友可以一起讨论下。前面那些抽取出来的JS，如果直接交给V8来运行，会出现undefined的错误，也就是window、location、settimeout等在V8中并没有定义。</p>
 <p>3   最后<br>在只有V8的情况下，如何运行网页中的JS了？那就需要mock了。</p>
@@ -220,27 +808,8 @@ location.href=redirectUrl;
 <p>最后给出部分初始化mocker代码如下，完整的需要mock前面给出的JS重定向的各种变形。实际mock可以参考Node.js，该货基于V8，提供了一些有用函数的实现，也有利于了解V8的特性。</p>
 <p>至于V8的使用，还是翻翻官方文档吧，这里就不说了。</p>
 <p>类似的，对于有些JSON数据，或者AJAX的抓取，应该也可以考虑类似的思路。欢迎大家讨论。</p>
-<pre>
-window = {}; 
-location = {}; 
-window.location = {}; 
-location.href = {}; 
-window.location.href = {}; 
-top={};
-parent={};
-
-location.assign = function (url) {
-  window.location.href = url;
-}
-
-location.replace = function (url) {
-  window.location.href = url;
-}
-
-window.location.assign = location.assign;
-window.location.replace = location.replace;
----
-</pre>]]></content>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">window = &#123;&#125;; </div><div class="line">location = &#123;&#125;; </div><div class="line">window.location = &#123;&#125;; </div><div class="line">location.href = &#123;&#125;; </div><div class="line">window.location.href = &#123;&#125;; </div><div class="line">top=&#123;&#125;;</div><div class="line">parent=&#123;&#125;;</div><div class="line"></div><div class="line">location.assign = function (url) &#123;</div><div class="line">  window.location.href = url;</div><div class="line">&#125;</div><div class="line"></div><div class="line">location.replace = function (url) &#123;</div><div class="line">  window.location.href = url;</div><div class="line">&#125;</div><div class="line"></div><div class="line">window.location.assign = location.assign;</div><div class="line">window.location.replace = location.replace;</div><div class="line">---</div></pre></td></tr></table></figure>
+]]></content>
     
     <summary type="html">
     
@@ -261,8 +830,8 @@ window.location.replace = location.replace;
   
   <entry>
     <title>基于sitemap的链接收集</title>
-    <link href="http://www.petermao.com/%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E/sitemap/"/>
-    <id>http://www.petermao.com/搜索引擎/sitemap/</id>
+    <link href="http://www.petermao.com/sitemap/"/>
+    <id>http://www.petermao.com/sitemap/</id>
     <published>2013-05-02T01:56:02.000Z</published>
     <updated>2017-02-14T02:02:51.000Z</updated>
     
@@ -320,8 +889,8 @@ window.location.replace = location.replace;
   
   <entry>
     <title>网页spam相关论文了解</title>
-    <link href="http://www.petermao.com/%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E/spam/"/>
-    <id>http://www.petermao.com/搜索引擎/spam/</id>
+    <link href="http://www.petermao.com/spam/"/>
+    <id>http://www.petermao.com/spam/</id>
     <published>2013-04-13T18:08:04.000Z</published>
     <updated>2017-02-14T02:02:51.000Z</updated>
     
@@ -376,8 +945,8 @@ window.location.replace = location.replace;
   
   <entry>
     <title>redis源代码分析25–VM（下）</title>
-    <link href="http://www.petermao.com/redis/121/"/>
-    <id>http://www.petermao.com/redis/121/</id>
+    <link href="http://www.petermao.com/121/"/>
+    <id>http://www.petermao.com/121/</id>
     <published>2011-05-01T03:01:22.000Z</published>
     <updated>2017-02-14T02:02:51.000Z</updated>
     
@@ -645,8 +1214,8 @@ static void vmThreadedIOCompletedJob(aeEventLoop *el, int fd, void *privdata,
   
   <entry>
     <title>redis源代码分析24–VM（中）</title>
-    <link href="http://www.petermao.com/redis/118/"/>
-    <id>http://www.petermao.com/redis/118/</id>
+    <link href="http://www.petermao.com/118/"/>
+    <id>http://www.petermao.com/118/</id>
     <published>2011-05-01T02:57:48.000Z</published>
     <updated>2017-02-14T02:02:51.000Z</updated>
     
@@ -825,8 +1394,8 @@ static robj *lookupKey(redisDb *db, robj *key) {
   
   <entry>
     <title>redis源代码分析23–VM（上）</title>
-    <link href="http://www.petermao.com/redis/116/"/>
-    <id>http://www.petermao.com/redis/116/</id>
+    <link href="http://www.petermao.com/116/"/>
+    <id>http://www.petermao.com/116/</id>
     <published>2011-05-01T02:56:36.000Z</published>
     <updated>2017-02-14T02:02:51.000Z</updated>
     
@@ -1061,8 +1630,8 @@ static void vmInit(void) {
   
   <entry>
     <title>redis源代码分析22–协议</title>
-    <link href="http://www.petermao.com/redis/114/"/>
-    <id>http://www.petermao.com/redis/114/</id>
+    <link href="http://www.petermao.com/114/"/>
+    <id>http://www.petermao.com/114/</id>
     <published>2011-05-01T02:55:03.000Z</published>
     <updated>2017-02-14T02:02:51.000Z</updated>
     
@@ -1172,8 +1741,8 @@ if (listLength(c-&gt;reply) == 0) {
   
   <entry>
     <title>redis源代码分析21– 事务</title>
-    <link href="http://www.petermao.com/redis/112/"/>
-    <id>http://www.petermao.com/redis/112/</id>
+    <link href="http://www.petermao.com/112/"/>
+    <id>http://www.petermao.com/112/</id>
     <published>2011-05-01T02:53:56.000Z</published>
     <updated>2017-02-14T02:02:51.000Z</updated>
     
@@ -1240,8 +1809,8 @@ server.dirty++;
   
   <entry>
     <title>redis源代码分析20–发布/订阅</title>
-    <link href="http://www.petermao.com/redis/110/"/>
-    <id>http://www.petermao.com/redis/110/</id>
+    <link href="http://www.petermao.com/110/"/>
+    <id>http://www.petermao.com/110/</id>
     <published>2011-05-01T02:52:44.000Z</published>
     <updated>2017-02-14T02:02:51.000Z</updated>
     
@@ -1325,8 +1894,8 @@ return receivers;
   
   <entry>
     <title>redis源代码分析19–主从复制</title>
-    <link href="http://www.petermao.com/redis/108/"/>
-    <id>http://www.petermao.com/redis/108/</id>
+    <link href="http://www.petermao.com/108/"/>
+    <id>http://www.petermao.com/108/</id>
     <published>2011-05-01T02:52:24.000Z</published>
     <updated>2017-02-14T02:02:51.000Z</updated>
     
@@ -1553,8 +2122,8 @@ static void slaveofCommand(redisClient *c) {
   
   <entry>
     <title>redis源代码分析18–持久化之aof</title>
-    <link href="http://www.petermao.com/redis/106/"/>
-    <id>http://www.petermao.com/redis/106/</id>
+    <link href="http://www.petermao.com/106/"/>
+    <id>http://www.petermao.com/106/</id>
     <published>2011-05-01T02:49:18.000Z</published>
     <updated>2017-02-14T02:02:51.000Z</updated>
     
@@ -1677,638 +2246,6 @@ int loadAppendOnlyFile(char *filename){
 &lt;p&gt;快照方式持久化的粒度有时间（秒）和改变的key数两种，如果持久化的粒度较小，对性能会有较大的影响，因为每次都是dump整个db；如果持久化的粒度较大，则在指定时间内指定数目的数据的持久化无法保证。而aof持久化的粒度是每次会修改db数据的命令，因此粒度是最小的了，跟日志方式有点类似，由于仅记录一条命令，性能也最好。另外，跟日志类似，aof文件会越来越大，则可以通过执行BGREWRITEAOF命令在后台重建该文件。&lt;/p&gt;
 &lt;p&gt;我们先来看看redis如何记录命令的。&lt;/p&gt;
 &lt;p&gt;call函数是命令执行的函数（前面命令处理章节已详细介绍过该函数）。如果命令执行前后数据有修改，则server.dirty的取值会有变化。在启用了aof机制的情况下，call函数会调用feedAppendOnlyFile保存命令及其相关参数。
-    
-    </summary>
-    
-      <category term="redis" scheme="http://www.petermao.com/categories/redis/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>redis源代码分析17–持久化之快照</title>
-    <link href="http://www.petermao.com/redis/104/"/>
-    <id>http://www.petermao.com/redis/104/</id>
-    <published>2011-05-01T02:45:26.000Z</published>
-    <updated>2017-02-14T02:02:51.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>redis的持久化支持快照方式。快照方式会将整个db dump到磁盘上。</p>
-<p>client 可以发布save/bgsave命令让server将db dump到磁盘上。其中bgsave会执行后台dump（新建子进程执行dump），而save是阻塞式的dump db，会影响其他client的命令执行。除了发布命令执行快照保存外，redis的serverCron也会按照配置的参数执行后台dump，另外 slave建立连接时，master也会执行一个后台dump，然后才发送数据给slave（这在主从复制一节中介绍）。<a id="more"></a></p>
-<pre>
-static int serverCron(struct aeEventLoop *eventLoop, long long id, void *clientData) {
-    ---
-/* Check if a background saving or AOF rewrite in progress terminated */
-    if (server.bgsavechildpid != -1 || server.bgrewritechildpid != -1) {
-      ---
-    }
-else {
-        /* If there is not a background saving in progress check if
-         * we have to save now */
-         time_t now = time(NULL);
-         for (j = 0; j < server.saveparamslen; j++) {
-            struct saveparam *sp = server.saveparams+j;
-
-            if (server.dirty >= sp->changes &&
-                now-server.lastsave > sp->seconds) {
-                redisLog(REDIS_NOTICE,"%d changes in %d seconds. Saving...",
-                    sp->changes, sp->seconds);
-                rdbSaveBackground(server.dbfilename);
-                break;
-            }
-         }
-}
----
-}
-</pre>
-无论是新建子进程还是阻塞式的执行快照方式（新建子进程方式会先调用rdbSaveBackground），最终都会调用rdbSave来保存db。
-
-在rdbSave中可以看到，redis是按type、key、val方式来保存db中的数据的。
-
-rdbLoad是快照方式保存数据后server启动时加载数据的函数，是rdbSave的逆过程。
-<pre>
-static int rdbSave(char *filename) {
-
-    ---
-    for (j = 0; j < server.dbnum; j++) {
-        redisDb *db = server.db+j;
-       ---
-        /* Iterate this DB writing every entry */
-        while((de = dictNext(di)) != NULL) {
-            robj *key = dictGetEntryKey(de);
-            robj *o = dictGetEntryVal(de);
-            time_t expiretime = getExpire(db,key);
-            ---
-            /* Save type, key, value */
-           if (rdbSaveType(fp,o->type) == -1) goto werr;
-          if (rdbSaveStringObject(fp,key) == -1) goto werr;
-          if (rdbSaveObject(fp,o) == -1) goto werr;
-          ---
-        }
-        dictReleaseIterator(di);
-    }
-    ---
-    /* Use RENAME to make sure the DB file is changed atomically only
-     * if the generate DB file is ok. */
-    if (rename(tmpfile,filename) == -1) {
-        redisLog(REDIS_WARNING,"Error moving temp DB file on the final destination: %s", strerror(errno));
-        unlink(tmpfile);
-        return REDIS_ERR;
-    }
-    ---
-}
-</pre>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;redis的持久化支持快照方式。快照方式会将整个db dump到磁盘上。&lt;/p&gt;
-&lt;p&gt;client 可以发布save/bgsave命令让server将db dump到磁盘上。其中bgsave会执行后台dump（新建子进程执行dump），而save是阻塞式的dump db，会影响其他client的命令执行。除了发布命令执行快照保存外，redis的serverCron也会按照配置的参数执行后台dump，另外 slave建立连接时，master也会执行一个后台dump，然后才发送数据给slave（这在主从复制一节中介绍）。
-    
-    </summary>
-    
-      <category term="redis" scheme="http://www.petermao.com/categories/redis/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>redis源代码分析16–阻塞式命令</title>
-    <link href="http://www.petermao.com/redis/102/"/>
-    <id>http://www.petermao.com/redis/102/</id>
-    <published>2011-05-01T02:43:28.000Z</published>
-    <updated>2017-02-14T02:02:51.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>redis现在只支持对list的阻塞式操作，相关的两个命令是brpop和blpop。</p>
-<p>这两个命令在list中有元素时，跟普通的pop没有区别，弹出list的一个元素，然后返回。但在list没有元素时，会为redisClient设置REDIS_BLOCKED标志，然后client阻塞（设置REDIS_BLOCKED标志的redisClient会一直阻塞，参考命令处理章节），一直到新元素加入时（push操作的处理函数pushGenericCommand），才会返回。</p>
-<p>这两个命令设置的处理函数brpopCommand和blpopCommand都会调用blockingPopGenericCommand。该函数在检查list中有元素后，会调用非阻塞的popGenericCommand来弹出一个元素，否则调用blockForKeys来处理阻塞的情况。<a id="more"></a></p>
-<pre>
-/* Blocking RPOP/LPOP */
-static void blockingPopGenericCommand(redisClient *c, int where) {
-    robj *o;
-    long long lltimeout;
-    time_t timeout;
-    int j;
-
-    /* Make sure timeout is an integer value */
-    if (getLongLongFromObjectOrReply(c,c->argv[c->argc-1],&lltimeout,
-            "timeout is not an integer") != REDIS_OK) return;
-
-    /* Make sure the timeout is not negative */
-    if (lltimeout < 0) {
-        addReplySds(c,sdsnew("-ERR timeout is negative\r\n"));
-        return;
-    }
-
-    for (j = 1; j < c->argc-1; j++) {
-        o = lookupKeyWrite(c->db,c->argv[j]);
-        if (o != NULL) {
-            if (o->type != REDIS_LIST) {
-                addReply(c,shared.wrongtypeerr);
-                return;
-            } else {
-                list *list = o->ptr;
-                if (listLength(list) != 0) {
-                    /* If the list contains elements fall back to the usual
-                     * non-blocking POP operation */
-                    robj *argv[2], **orig_argv;
-                    int orig_argc;
-
-                    /* We need to alter the command arguments before to call
-                     * popGenericCommand() as the command takes a single key. */
-                    orig_argv = c->argv;
-                    orig_argc = c->argc;
-                    argv[1] = c->argv[j];
-                    c->argv = argv;
-                    c->argc = 2;
-
-                    /* Also the return value is different, we need to output
-                     * the multi bulk reply header and the key name. The
-                     * "real" command will add the last element (the value)
-                     * for us. If this souds like an hack to you it's just
-                     * because it is... */
-                    addReplySds(c,sdsnew("*2\r\n"));
-                    addReplyBulk(c,argv[1]);
-                    popGenericCommand(c,where);
-
-                    /* Fix the client structure with the original stuff */
-                    c->argv = orig_argv;
-                    c->argc = orig_argc;
-                    return;
-                }
-            }
-        }
-    }
-
-    /* If we are inside a MULTI/EXEC and the list is empty the only thing
-     * we can do is treating it as a timeout (even with timeout 0). */
-    if (c->flags & REDIS_MULTI) {
-        addReply(c,shared.nullmultibulk);
-        return;
-    }
-
-    /* If the list is empty or the key does not exists we must block */
-    timeout = lltimeout;
-    if (timeout > 0) timeout += time(NULL);
-    blockForKeys(c,c->argv+1,c->argc-2,timeout);
-}
-</pre>
-blockForKeys会在db->blockingkeys记下client和等待的key的对应关系，然后给client设置REDIS_BLOCKED标志，这样client就一直阻塞了。
-<pre>
-static void blockForKeys(redisClient *c, robj **keys, int numkeys, time_t timeout) {
-    dictEntry *de;
-    list *l;
-    int j;
-    ---
-    if (c->fd < 0) return;
-
-    c->blockingkeys = zmalloc(sizeof(robj*)*numkeys);
-    c->blockingkeysnum = numkeys;
-    c->blockingto = timeout;
-    for (j = 0; j < numkeys; j++) {
-        /* Add the key in the client structure, to map clients -> keys */
-        c->blockingkeys[j] = keys[j];
-        incrRefCount(keys[j]);
-
-        /* And in the other "side", to map keys -> clients */
-        de = dictFind(c->db->blockingkeys,keys[j]);
-        if (de == NULL) {
-            int retval;
-
-            /* For every key we take a list of clients blocked for it */
-            l = listCreate();
-            retval = dictAdd(c->db->blockingkeys,keys[j],l);
-            incrRefCount(keys[j]);
-            assert(retval == DICT_OK);
-        } else {
-            l = dictGetEntryVal(de);
-        }
-        listAddNodeTail(l,c);
-    }
-    /* Mark the client as a blocked client */
-    c->flags |= REDIS_BLOCKED;
-    server.blpop_blocked_clients++;
-}
-</pre>
-等待的client会一直阻塞，直到有push操作，此时会调用unblockClientWaitingData来解除client的阻塞。
-<pre>
-/* Unblock a client that's waiting in a blocking operation such as BLPOP */
-// 减少对所阻塞对象的引用
-static void unblockClientWaitingData(redisClient *c) {
-    dictEntry *de;
-    list *l;
-    int j;
-
-    assert(c->blockingkeys != NULL);
-    /* The client may wait for multiple keys, so unblock it for every key. */
-    for (j = 0; j < c->blockingkeysnum; j++) {
-        /* Remove this client from the list of clients waiting for this key. */
-        de = dictFind(c->db->blockingkeys,c->blockingkeys[j]);
-        assert(de != NULL);
-        l = dictGetEntryVal(de);
-        listDelNode(l,listSearchKey(l,c));
-        /* If the list is empty we need to remove it to avoid wasting memory */
-        if (listLength(l) == 0)
-            dictDelete(c->db->blockingkeys,c->blockingkeys[j]);
-        decrRefCount(c->blockingkeys[j]);
-    }
-    /* Cleanup the client structure */
-    zfree(c->blockingkeys);
-    c->blockingkeys = NULL;
-    c->flags &= (~REDIS_BLOCKED);
-    server.blpop_blocked_clients--;
-    /* We want to process data if there is some command waiting
-     * in the input buffer. Note that this is safe even if
-     * unblockClientWaitingData() gets called from freeClient() because
-     * freeClient() will be smart enough to call this function
-     * *after* c->querybuf was set to NULL. */
-    if (c->querybuf && sdslen(c->querybuf) > 0) processInputBuffer(c);
-}
-</pre>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;redis现在只支持对list的阻塞式操作，相关的两个命令是brpop和blpop。&lt;/p&gt;
-&lt;p&gt;这两个命令在list中有元素时，跟普通的pop没有区别，弹出list的一个元素，然后返回。但在list没有元素时，会为redisClient设置REDIS_BLOCKED标志，然后client阻塞（设置REDIS_BLOCKED标志的redisClient会一直阻塞，参考命令处理章节），一直到新元素加入时（push操作的处理函数pushGenericCommand），才会返回。&lt;/p&gt;
-&lt;p&gt;这两个命令设置的处理函数brpopCommand和blpopCommand都会调用blockingPopGenericCommand。该函数在检查list中有元素后，会调用非阻塞的popGenericCommand来弹出一个元素，否则调用blockForKeys来处理阻塞的情况。
-    
-    </summary>
-    
-      <category term="redis" scheme="http://www.petermao.com/categories/redis/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>redis源代码分析15–val加载机制</title>
-    <link href="http://www.petermao.com/redis/100/"/>
-    <id>http://www.petermao.com/redis/100/</id>
-    <published>2011-04-30T20:30:43.000Z</published>
-    <updated>2017-02-14T02:02:51.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>这一节主要介绍下val的加载。</p>
-<p>对于某些命令，比如get somekey，当运行到processCommand时可能key对应的val不在内存中。在运行命令绑定的处理函数之前，redis会提前加载其val。</p>
-<p>在 processCommand中，在vm开启并启用多线程时，会调用 blockClientOnSwappedKeys来加载可能已swap的val，如果blockClientOnSwappedKeys返回0，说明有 swap的val没被加载，则返回不调用call了（此时client会设置 REDIS_IO_WAIT标志，并已放到等待列表中）。代码如下：<a id="more"></a></p>
-<p><pre></pre></p>
-<h2 id="static-int-processCommand-redisClient-c"><a href="#static-int-processCommand-redisClient-c" class="headerlink" title="static int processCommand(redisClient *c) {"></a>static int processCommand(redisClient *c) {</h2><pre><code>if (server.vm_enabled &amp;&amp; server.vm_max_threads &gt; 0 &amp;&amp;
-       blockClientOnSwappedKeys(c,cmd)) return 1;
-   call(c,cmd);
- ---
-</code></pre><p>}<br><br>在blockClientOnSwappedKeys函数中，如果命令设置了预加载函数，比如zunionstore和zinterstore就设置了预加载函数 zunionInterBlockClientOnSwappedKeys，则使用设置的预加载函数加载swap的val，否则使用 waitForMultipleSwappedKeys加载swap的val，不过查看 zunionInterBlockClientOnSwappedKeys和waitForMultipleSwappedKeys的实现就可以发现， 这些函数最终都调用waitForSwappedKey。在预加载函数返回后，若client的io_keys链表非空（io_keys是该client 不在内存中的val的链表），则设置client的REDIS_IO_WAIT标志，取消client的read 事件（在这之前，client已放到对应key的阻塞队列中了）。</p>
-<p><pre><br>static int blockClientOnSwappedKeys(redisClient <em>c, struct redisCommand </em>cmd) {<br>    if (cmd-&gt;vm_preload_proc != NULL) {<br>        cmd-&gt;vm_preload_proc(c,cmd,c-&gt;argc,c-&gt;argv);<br>    } else {<br>        waitForMultipleSwappedKeys(c,cmd,c-&gt;argc,c-&gt;argv);<br>    }</pre></p>
-<pre><code>/* If the client was blocked for at least one key, mark it as blocked. */
-if (listLength(c-&gt;io_keys)) {
-    c-&gt;flags |= REDIS_IO_WAIT;
-    aeDeleteFileEvent(server.el,c-&gt;fd,AE_READABLE);
-    server.vm_blocked_clients++;
-    return 1;
-} else {
-    return 0;
-}
-</code></pre><p>}<br><br>我们看看waitForMultipleSwappedKeys的实现。waitForMultipleSwappedKeys会根据命令字表中设置的预加载参数，加载需要加载的val。</p>
-<p><pre><br>static void waitForMultipleSwappedKeys(redisClient <em>c, struct redisCommand </em>cmd, int argc, robj **argv) {<br>    int j, last;<br>    if (cmd-&gt;vm_firstkey == 0) return;<br>    last = cmd-&gt;vm_lastkey;<br>    if (last &lt; 0) last = argc+last;<br>    for (j = cmd-&gt;vm_firstkey; j &lt;= last; j += cmd-&gt;vm_keystep) {<br>        redisAssert(j &lt; argc);<br>        waitForSwappedKey(c,argv[j]);<br>    }<br>}<br></pre><br>比如我们查看get命令字的设置。后面的1,1,1就是表示加载的val在argv中的位置，每个get命令最多需要预加载1个val。</p>
-<p><pre><br>{“get”,getCommand,2,REDIS_CMD_INLINE,NULL,1,1,1},<br></pre><br>waitForSwappedKey 涉及到vm的多线程，建议先粗略理解下，并在阅读vm章节后再返回此处阅读。该函数所做的主要工作就是将(c, key) 加到c-&gt;db-&gt;io_keys中，而db其实指向全局server的db，然后创建一个job，插入到工作线程中，让工作线程完成val 的加载。</p>
-<p><pre><br>static int waitForSwappedKey(redisClient <em>c, robj </em>key) {<br>    struct dictEntry <em>de;<br>    robj </em>o;<br>    list *l;</pre></p>
-<pre><code>/* If the key does not exist or is already in RAM we don&apos;t need to
- * block the client at all. */
-de = dictFind(c-&gt;db-&gt;dict,key);
-if (de == NULL) return 0;
-o = dictGetEntryKey(de);
-if (o-&gt;storage == REDIS_VM_MEMORY) {
-    return 0;
-} else if (o-&gt;storage == REDIS_VM_SWAPPING) {
-    /* We were swapping the key, undo it! */
-    vmCancelThreadedIOJob(o);
-    return 0;
-}
-
-/* OK: the key is either swapped, or being loaded just now. */
-
-/* Add the key to the list of keys this client is waiting for.
- * This maps clients to keys they are waiting for. */
-listAddNodeTail(c-&gt;io_keys,key);
-incrRefCount(key);
-
-/* Add the client to the swapped keys =&gt; clients waiting map. */
-de = dictFind(c-&gt;db-&gt;io_keys,key);
-if (de == NULL) {
-    int retval;
-
-    /* For every key we take a list of clients blocked for it */
-    l = listCreate();
-    retval = dictAdd(c-&gt;db-&gt;io_keys,key,l);
-    incrRefCount(key);
-    assert(retval == DICT_OK);
-} else {
-    l = dictGetEntryVal(de);
-}
-listAddNodeTail(l,c);
-
-/* Are we already loading the key from disk? If not create a job */
-if (o-&gt;storage == REDIS_VM_SWAPPED) {
-    iojob *j;
-
-    o-&gt;storage = REDIS_VM_LOADING;
-    j = zmalloc(sizeof(*j));
-    j-&gt;type = REDIS_IOJOB_LOAD;
-    j-&gt;db = c-&gt;db;
-    j-&gt;key = o;
-    j-&gt;key-&gt;vtype = o-&gt;vtype;
-    j-&gt;page = o-&gt;vm.page;
-    j-&gt;val = NULL;
-    j-&gt;canceled = 0;
-    j-&gt;thread = (pthread_t) -1;
-    lockThreadedIO();
-    queueIOJob(j);
-    unlockThreadedIO();
-}
-return 1;
-</code></pre><p>}<br><br>插入工作线程的job在运行完后，会调用 vmThreadedIOCompletedJob，在该函数中会调用handleClientsBlockedOnSwappedKey处理阻塞的 client，而handleClientsBlockedOnSwappedKey所做的主要工作就是将所有val已加载的client放到 server.io_ready_clients中，此时client已ready好了，但还没有加入read事件循环（因为之前因为等待val已删除其 read事件）。</p>
-<p><pre><br>static void handleClientsBlockedOnSwappedKey(redisDb <em>db, robj </em>key) {<br>    struct dictEntry <em>de;<br>    list </em>l;<br>    listNode *ln;<br>    int len;</pre></p>
-<pre><code>de = dictFind(db-&gt;io_keys,key);
-if (!de) return;
-
-l = dictGetEntryVal(de);
-len = listLength(l);
-/* Note: we can&apos;t use something like while(listLength(l)) as the list
- * can be freed by the calling function when we remove the last element. */
-while (len--) {
-    ln = listFirst(l);
-    redisClient *c = ln-&gt;value;
-
-    if (dontWaitForSwappedKey(c,key)) {
-        /* Put the client in the list of clients ready to go as we
-         * loaded all the keys about it. */
-        listAddNodeTail(server.io_ready_clients,c);
-    }
-}
-</code></pre><p>}<br><br>最后还剩下一个问题，那就是处于server.io_ready_clients的clint会在什么时候增加read事件，从而继续让其接收客户端的输入了。这个工作在beforeSleep函数中完成（前面的事件循环中有详细介绍）。beforeSleep会为server.io_ready_clients中的client增加read事件，调用processInputBuffer处理其输入。</p>
-<p>另外注意，如果client需要的val在检查时都在内存中，但当执行命令处理函数时，该val被swap出去了，则只能使用vmLoadObject直接加载了（阻塞方式）。对此种情况，redis的解释是In practical terms this should onlyhappen with SORT BY command or if there is a bug in this function（参考blockClientOnSwappedKeys前的注释）。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;这一节主要介绍下val的加载。&lt;/p&gt;
-&lt;p&gt;对于某些命令，比如get somekey，当运行到processCommand时可能key对应的val不在内存中。在运行命令绑定的处理函数之前，redis会提前加载其val。&lt;/p&gt;
-&lt;p&gt;在 processCommand中，在vm开启并启用多线程时，会调用 blockClientOnSwappedKeys来加载可能已swap的val，如果blockClientOnSwappedKeys返回0，说明有 swap的val没被加载，则返回不调用call了（此时client会设置 REDIS_IO_WAIT标志，并已放到等待列表中）。代码如下：
-    
-    </summary>
-    
-      <category term="redis" scheme="http://www.petermao.com/categories/redis/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>redis源代码分析14–命令处理的一般过程</title>
-    <link href="http://www.petermao.com/redis/98/"/>
-    <id>http://www.petermao.com/redis/98/</id>
-    <published>2011-04-30T20:28:16.000Z</published>
-    <updated>2017-02-14T02:02:51.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>这个部分我们介绍下命令处理的一般过程。<br>在createClient时，为client的read事件设置了readQueryFromClient函数。我们来看看怎么处理client的命令的。<br>readQueryFromClient使用read一次读入REDIS_IOBUF_LEN字节，并保存在client中的querybuf参数中，然后调用processInputBuffer继续处理。<a id="more"></a></p>
-<p><pre><br>static void readQueryFromClient(aeEventLoop <em>el, int fd, void </em>privdata, int mask){</pre></p>
-<h2 id="redisClient-c-redisClient-privdata"><a href="#redisClient-c-redisClient-privdata" class="headerlink" title="   redisClient c =(redisClient)privdata;"></a>   redisClient <em>c =(redisClient</em>)privdata;</h2><h2 id="nread-read-fd-buf-REDIS-IOBUF-LEN"><a href="#nread-read-fd-buf-REDIS-IOBUF-LEN" class="headerlink" title="   nread = read(fd, buf, REDIS_IOBUF_LEN);"></a>   nread = read(fd, buf, REDIS_IOBUF_LEN);</h2><p>   if(nread){<br>       c-&gt;querybuf = sdscatlen(c-&gt;querybuf, buf, nread);<br>       c-&gt;lastinteraction = time(NULL);<br>   } else {<br>       return;<br>   }<br>   processInputBuffer(c);<br>}<br><br>processInputBuffer只处理不在REDIS_BLOCKED 和REDIS_IO_WAIT状态的client，也就是已ready好的client。另外如果c-&gt;bulklen ==-1（对于一般命令，c-&gt;bulklen都为-1，对于用multibulk协议传输的命令，下一个函数有更详细的介绍），则按行解析querybuf，并将解析到的参数保存在argv中，然后调用processCommand进行下一步处理，并且如果processCommand返回非0，会继续处理client输入。</p>
-<p><pre><br>static void processInputBuffer(redisClient *c) {</pre></p>
-<h2 id="again"><a href="#again" class="headerlink" title="again:"></a>again:</h2><pre><code>if (c-&gt;flags &amp; REDIS_BLOCKED || c-&gt;flags &amp; REDIS_IO_WAIT) return;
-if (c-&gt;bulklen == -1) {
-   --
-    if (p) {
-        ---
-        if (c-&gt;argc) {
-           ---
-            if (processCommand(c) &amp;&amp; sdslen(c-&gt;querybuf)) goto again;
-        }
-        --
-    }
-} else {
-    --
-    int qbl = sdslen(c-&gt;querybuf);
-    if (processCommand(c) &amp;&amp; sdslen(c-&gt;querybuf)) goto again;
-        return;
-}
-</code></pre><p>}<br><br>processCommand这段代码对multi-bulk 协议的解析写得真不敢恭维，转来转去的，真没劲。参看代码中的解释。解析完multibulk后，如果输入的命令是quit，则表示客户端退出了，释放其连接，返回0，表示不用继续处理了。接着使用 lookupCommand查看命令在cmdTable中对应的命令项，然后又是multbulk，接着检查安全认证情况，接着检查内存使用（前面内存章节中有介绍），接着查看 pubsub_channels、pubsub_patterns长度是否为0，若不为0，则表示处于订阅模式下（后文介绍），只允许命令 subscribeCommand、unsubscribeCommand、psubscribeCommand、 punsubscribeCommand。接着如果client处于事务模式下，则在命令不是execCommand、discardCommand的情况下将命令排队（事务处理后文也有介绍）。接着看看是否需要预先加载key，最后终于来到call函数中调用命令了。</p>
-<p><pre><br>static int processCommand(redisClient *c) {</pre></p>
-<pre><code>struct redisCommand *cmd;
-
- ---
-
- // 第一个字符是 * 表示后面是multi-bulk协议格式
-
-// 解析得到后面的data 项数
-if (c-&gt;multibulk == 0 &amp;&amp; c-&gt;argc == 1 &amp;&amp; ((char*)(c-&gt;argv[0]-&gt;ptr))[0] == &apos;*&apos;) {
-    c-&gt;multibulk = atoi(((char*)c-&gt;argv[0]-&gt;ptr)+1);
-    if (c-&gt;multibulk &lt;= 0) {
-        resetClient(c);
-        return 1;
-    } else {
-        decrRefCount(c-&gt;argv[c-&gt;argc-1]);
-        c-&gt;argc--;
-        return 1;
-    }
-} else if (c-&gt;multibulk) {
-    // 解析时对于普通的命令: c-&gt;bulklen始终 = -1,
-    //前面已获得 c-&gt;multibulk值, c-&gt;bulklen一开始为-1，随后在 if (c-&gt;bulklen == -1) 中置为需要读取的字符个数，然后返回到processInputBuffer的else中处理得到输入的参数，然后再到这儿时就会进入 if (c-&gt;bulklen == -1) 的else中，将参数保存到mbargv中，这样一直到 c-&gt;multibulk为0，才解析完multibulk协议，进行下一步处理。
-    if (c-&gt;bulklen == -1) {
-        if (((char*)c-&gt;argv[0]-&gt;ptr)[0] != &apos;$&apos;) {
-            addReplySds(c,sdsnew(&quot;-ERR multi bulk protocol error\r\n&quot;));
-            resetClient(c);
-            return 1;
-        } else {
-            int bulklen = atoi(((char*)c-&gt;argv[0]-&gt;ptr)+1);
-            decrRefCount(c-&gt;argv[0]);
-            if (bulklen &lt; 0 || bulklen &gt; 1024*1024*1024) {
-                c-&gt;argc--;
-                addReplySds(c,sdsnew(&quot;-ERR invalid bulk write count\r\n&quot;));
-                resetClient(c);
-                return 1;
-            }
-            c-&gt;argc--;
-            c-&gt;bulklen = bulklen+2; /* add two bytes for CR+LF */
-            return 1;
-        }
-    } else {
-        c-&gt;mbargv = zrealloc(c-&gt;mbargv,(sizeof(robj*))*(c-&gt;mbargc+1));
-        c-&gt;mbargv[c-&gt;mbargc] = c-&gt;argv[0];
-        c-&gt;mbargc++;
-        c-&gt;argc--;
-        c-&gt;multibulk--;
-        if (c-&gt;multibulk == 0) {
-            robj **auxargv;
-            int auxargc;
-
-            /* Here we need to swap the multi-bulk argc/argv with the
-             * normal argc/argv of the client structure. */
-            auxargv = c-&gt;argv;
-            c-&gt;argv = c-&gt;mbargv;
-            c-&gt;mbargv = auxargv;
-
-            auxargc = c-&gt;argc;
-            c-&gt;argc = c-&gt;mbargc;
-            c-&gt;mbargc = auxargc;
-
-            /* We need to set bulklen to something different than -1
-             * in order for the code below to process the command without
-             * to try to read the last argument of a bulk command as
-             * a special argument. */
-            c-&gt;bulklen = 0;
-            /* continue below and process the command */
-        } else {
-            c-&gt;bulklen = -1;
-            return 1;
-        }
-    }
-}
-/* -- end of multi bulk commands processing -- */
-
----
-if (!strcasecmp(c-&gt;argv[0]-&gt;ptr,&quot;quit&quot;)) {
-    freeClient(c);
-    return 0;
-}
----
-cmd = lookupCommand(c-&gt;argv[0]-&gt;ptr);
-if (!cmd) {
-    addReplySds(c,
-        sdscatprintf(sdsempty(), &quot;-ERR unknown command &apos;%s&apos;\r\n&quot;,
-            (char*)c-&gt;argv[0]-&gt;ptr));
-    resetClient(c);
-    return 1;
-} else if ((cmd-&gt;arity &gt; 0 &amp;&amp; cmd-&gt;arity != c-&gt;argc) ||
-           (c-&gt;argc &lt; -cmd-&gt;arity)) {
-    addReplySds(c,
-        sdscatprintf(sdsempty(),
-            &quot;-ERR wrong number of arguments for &apos;%s&apos; command\r\n&quot;,
-            cmd-&gt;name));
-    resetClient(c);
-    return 1;
-} else if (cmd-&gt;flags &amp; REDIS_CMD_BULK &amp;&amp; c-&gt;bulklen == -1) {
-    /* This is a bulk command, we have to read the last argument yet. */
-    int bulklen = atoi(c-&gt;argv[c-&gt;argc-1]-&gt;ptr);
-
-    decrRefCount(c-&gt;argv[c-&gt;argc-1]);
-    if (bulklen &lt; 0 || bulklen &gt; 1024*1024*1024) {
-        c-&gt;argc--;
-        addReplySds(c,sdsnew(&quot;-ERR invalid bulk write count\r\n&quot;));
-        resetClient(c);
-        return 1;
-    }
-    c-&gt;argc--;
-    c-&gt;bulklen = bulklen+2; /* add two bytes for CR+LF */
-   ---
-    if ((signed)sdslen(c-&gt;querybuf) &gt;= c-&gt;bulklen) {
-        c-&gt;argv[c-&gt;argc] = createStringObject(c-&gt;querybuf,c-&gt;bulklen-2);
-        c-&gt;argc++;
-        c-&gt;querybuf = sdsrange(c-&gt;querybuf,c-&gt;bulklen,-1);
-    } else {
-        /* Otherwise return... there is to read the last argument
-         * from the socket. */
-        return 1;
-    }
-}
-/* Let&apos;s try to encode the bulk object to save space. */
-if (cmd-&gt;flags &amp; REDIS_CMD_BULK)
-    c-&gt;argv[c-&gt;argc-1] = tryObjectEncoding(c-&gt;argv[c-&gt;argc-1]);
-
-/* Check if the user is authenticated */
-if (server.requirepass &amp;&amp; !c-&gt;authenticated &amp;&amp; cmd-&gt;proc != authCommand) {
-    addReplySds(c,sdsnew(&quot;-ERR operation not permitted\r\n&quot;));
-    resetClient(c);
-    return 1;
-
-}
-if (server.maxmemory) freeMemoryIfNeeded();
-if (server.maxmemory &amp;&amp; (cmd-&gt;flags &amp; REDIS_CMD_DENYOOM) &amp;&amp;
-    zmalloc_used_memory() &gt; server.maxmemory)
-{
-    addReplySds(c,sdsnew(&quot;-ERR command not allowed when used memory &gt; &apos;maxmemory&apos;\r\n&quot;));
-    resetClient(c);
-    return 1;
-}
-
-/* Only allow SUBSCRIBE and UNSUBSCRIBE in the context of Pub/Sub */
-if ((dictSize(c-&gt;pubsub_channels) &gt; 0 || listLength(c-&gt;pubsub_patterns) &gt; 0)
-    &amp;&amp;
-    cmd-&gt;proc != subscribeCommand &amp;&amp; cmd-&gt;proc != unsubscribeCommand &amp;&amp;
-    cmd-&gt;proc != psubscribeCommand &amp;&amp; cmd-&gt;proc != punsubscribeCommand) {
-    addReplySds(c,sdsnew(&quot;-ERR only (P)SUBSCRIBE / (P)UNSUBSCRIBE / QUIT allowed in this context\r\n&quot;));
-    resetClient(c);
-    return 1;
-}
-
-/* Exec the command */
-if (c-&gt;flags &amp; REDIS_MULTI &amp;&amp; cmd-&gt;proc != execCommand &amp;&amp; cmd-&gt;proc != discardCommand) {
-    queueMultiCommand(c,cmd);
-    addReply(c,shared.queued);
-} else {
-    if (server.vm_enabled &amp;&amp; server.vm_max_threads &gt; 0 &amp;&amp;
-        blockClientOnSwappedKeys(c,cmd)) return 1;
-    call(c,cmd);
-}
-
-/* Prepare the client for the next command */
-resetClient(c);
-return 1;
-</code></pre><p>}<br><br>call函数首先调用命令字绑定的处理函数，返回时检查是否修改数据，若有修改，则在aof启用的情况下，写aof log，并在数据改变或者强制复制的情况下向slaves复制，最后向monitors发送当前命令及参数。</p>
-<p><pre><br>/<em> Call() is the core of Redis execution of a command </em>/<br>static void call(redisClient <em>c, struct redisCommand </em>cmd) {<br>    long long dirty;</pre></p>
-<pre><code>dirty = server.dirty;
-cmd-&gt;proc(c);
-dirty = server.dirty-dirty;
-
-if (server.appendonly &amp;&amp; dirty)
-    feedAppendOnlyFile(cmd,c-&gt;db-&gt;id,c-&gt;argv,c-&gt;argc);
-if ((dirty || cmd-&gt;flags &amp; REDIS_CMD_FORCE_REPLICATION) &amp;&amp;
-    listLength(server.slaves))
-    replicationFeedSlaves(server.slaves,c-&gt;db-&gt;id,c-&gt;argv,c-&gt;argc);
-if (listLength(server.monitors))
-    replicationFeedMonitors(server.monitors,c-&gt;db-&gt;id,c-&gt;argv,c-&gt;argc);
-server.stat_numcommands++;
-</code></pre><p>}<br><br>最后介绍下命令表，定义如下：</p>
-<p><pre><br>struct redisCommand {<br>    char <em>name;<br>    redisCommandProc </em>proc;<br>    int arity;<br>    int flags;<br>    /* Use a function to determine which keys need to be loaded</pre></p>
-<pre><code> * in the background prior to executing this command. Takes precedence
- * over vm_firstkey and others, ignored when NULL */
-redisVmPreloadProc *vm_preload_proc;
-/* What keys should be loaded in background when calling this command? */
-int vm_firstkey; /* The first argument that&apos;s a key (0 = no keys) */
-int vm_lastkey;  /* THe last argument that&apos;s a key */
-int vm_keystep;  /* The step between first and last key */
-</code></pre><p>};<br><br>对于每一个命令字，都有一个name和一个处理函数，对于某些key，在启用vm的情况下，需要使用vm_preload_proc预先加载某些key。下一节我们介绍下key的预先加载。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;这个部分我们介绍下命令处理的一般过程。&lt;br&gt;在createClient时，为client的read事件设置了readQueryFromClient函数。我们来看看怎么处理client的命令的。&lt;br&gt;readQueryFromClient使用read一次读入REDIS_IOBUF_LEN字节，并保存在client中的querybuf参数中，然后调用processInputBuffer继续处理。
-    
-    </summary>
-    
-      <category term="redis" scheme="http://www.petermao.com/categories/redis/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>redis源代码分析13–client连接（下）</title>
-    <link href="http://www.petermao.com/redis/96/"/>
-    <id>http://www.petermao.com/redis/96/</id>
-    <published>2011-04-30T20:25:37.000Z</published>
-    <updated>2017-02-14T02:02:51.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>这一节我们介绍下client连接的几个标志。</p>
-<p>client的flags的取值有如下几种：</p>
-<p><pre></pre></p>
-<p>#define REDIS_SLAVE 1      /<em> This client is a slave server </em>/</p>
-<p>#define REDIS_MASTER 2     /<em> This client is a master server </em>/</p>
-<p>#define REDIS_MONITOR 4    /<em> This client is a slave monitor, see MONITOR </em>/</p>
-<p>#define REDIS_MULTI 8      /<em> This client is in a MULTI context </em>/</p>
-<p>#define REDIS_BLOCKED 16   /<em> The client is waiting in a blocking operation </em>/</p>
-<p>#define REDIS_IO_WAIT 32   /<em> The client is waiting for Virtual Memory I/O </em>/<br><br>redis支持主从复制、监控特性，对这些server的连接状态也是保存在当前server的redisClient结构中， 并在redisClient的flags标志中设置REDIS_SLAVE 、REDIS_MASTER、 REDIS_MONITOR参数。我们在后续的章节中详细分析redis的主从复制、监控等特性。</p>
-<p>一般的client仅会设置REDIS_MULTI、REDIS_BLOCKED、REDIS_IO_WAIT中的1个或多个。REDIS_MULTI跟redis的事务支持相关，我们后续介绍。REDIS_BLOCKED标志跟redis支持的list阻塞式pop（BLPOP、BRPOP）有关，也就是当list为空的时候，会阻塞client，一直到有元素加入list，此时再pop。REDIS_IO_WAIT跟命令字有关，对于某些命令，如果启用vm的话，需要提前加载其key。我们在命令处理章节中分析。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;这一节我们介绍下client连接的几个标志。&lt;/p&gt;
-&lt;p&gt;client的flags的取值有如下几种：&lt;/p&gt;
-&lt;p&gt;&lt;pre&gt;&lt;/pre&gt;&lt;/p&gt;
-&lt;p&gt;#define REDIS_SLAVE 1      /&lt;em&gt; This client is a slave ser
     
     </summary>
     

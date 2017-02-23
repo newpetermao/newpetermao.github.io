@@ -1,0 +1,1102 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="源码分析,leveldb,存储,snapshot," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="petermao" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="snapshot，也就是快照机制的作用，就是使得读操作不受写操作影响。其巧妙的使用了SequenceNumber来实现这一机制。
+上一节中，我们知道，SequenceNumber使得对写入的任何key在内部存储时都会附加一个递增的SequenceNumber。而在leveldb内部，一次snapshot也对应一个全局唯一的SequenceNumber。因此，在调用GetSnapshot获取snap">
+<meta property="og:type" content="article">
+<meta property="og:title" content="leveldb注释8--snapshot机制">
+<meta property="og:url" content="http://www.petermao.com/leveldb-8-snapshot/index.html">
+<meta property="og:site_name" content="petermao">
+<meta property="og:description" content="snapshot，也就是快照机制的作用，就是使得读操作不受写操作影响。其巧妙的使用了SequenceNumber来实现这一机制。
+上一节中，我们知道，SequenceNumber使得对写入的任何key在内部存储时都会附加一个递增的SequenceNumber。而在leveldb内部，一次snapshot也对应一个全局唯一的SequenceNumber。因此，在调用GetSnapshot获取snap">
+<meta property="og:updated_time" content="2017-02-20T12:38:38.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="leveldb注释8--snapshot机制">
+<meta name="twitter:description" content="snapshot，也就是快照机制的作用，就是使得读操作不受写操作影响。其巧妙的使用了SequenceNumber来实现这一机制。
+上一节中，我们知道，SequenceNumber使得对写入的任何key在内部存储时都会附加一个递增的SequenceNumber。而在leveldb内部，一次snapshot也对应一个全局唯一的SequenceNumber。因此，在调用GetSnapshot获取snap">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: 'KHGF7KOV3V',
+      apiKey: '6d4bcebc9082d9fbca7e7eacc3bfa281',
+      indexName: 'blog',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"输入关键词","hits_empty":"没有找到与 ${query} 相关的内容","hits_stats":"${hits}条相关记录，共耗时 ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.petermao.com/leveldb-8-snapshot/"/>
+
+
+
+
+
+  <title> leveldb注释8--snapshot机制 | petermao </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">petermao</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle"></p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://www.petermao.com/leveldb-8-snapshot/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="John Doe">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="petermao">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="petermao" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                leveldb注释8--snapshot机制
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2013-07-14T12:55:54+08:00">
+                2013-07-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              
+                <span>分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/leveldb/" itemprop="url" rel="index">
+                    <span itemprop="name">leveldb</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/leveldb-8-snapshot/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="leveldb-8-snapshot/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             
+             
+               
+                 
+                 
+               
+             
+             <span id="/leveldb-8-snapshot/" class="leancloud_visitors" data-flag-title="leveldb注释8--snapshot机制" data-flag-date="1373777754000" data-flag-category="leveldb" >
+             </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>snapshot，也就是快照机制的作用，就是使得读操作不受写操作影响。其巧妙的使用了SequenceNumber来实现这一机制。</p>
+<p>上一节中，我们知道，SequenceNumber使得对写入的任何key在内部存储时都会附加一个递增的SequenceNumber。而在leveldb内部，一次snapshot也对应一个全局唯一的SequenceNumber。因此，在调用GetSnapshot获取snapshot时，leveldb所做的仅仅是生成一个SequenceNumber。db内部使用双向循环链表保存先后生成的snapshot。<a id="more"></a>获取快照GetSnapshot会将新snapshot加入链表，而释放快照ReleaseSnapshot则将snapshot从链表中删除。DBImpl类中的snapshots_成员就是这个链表。这部分代码主要在snapshot.h与db_impl.cc/.h中。代码很简单，内部是一个双向循环链表的封装。</p>
+<p><pre><br>const Snapshot* DBImpl::GetSnapshot() {<br>  MutexLock l(&amp;mutex<em>);<br>  return snapshots</em>.New(versions_-&gt;LastSequence());<br>}<br></pre><br>snapshot机制主要会影响指定的读操作与所有后续的压缩操作，直到该snapshot释放。</p>
+<p>从前面的使用接口章节中，我们知道，当读操作Get函数指定snapshot选项时，从snapshot生成至Get函数调用的这段时间里的写入操作对该次读没有影响。当指定snapshot时，Get函数会使用这个snapshot的sequencenumber+输入的key来构造要查找的LookupKey（没有指定snapshot，则使用当前已使用的最大sequencenumber）。而对于要查找的数据结构memtable、immunable memtable与sstable来讲，其内部存储的”key”都是带sequencenumber的（上一章节的分析），其最终查找到的”key”会满足key == 输入的key，而sequencenumber&lt;=Get函数传入的sequencenumber。这样，对于那些key相同但sequencenumber比较大（也就是后续针对同一个key做写入操作）的slice，则查找不到，自动的被屏蔽掉了。关于读操作Get的详细细节，我们在后续章节进行分析。</p>
+<p><pre><br>Status DBImpl::Get(const ReadOptions&amp; options,<br>                   const Slice&amp; key,<br>                   std::string<em> value) {<br>  Status s;<br>  MutexLock l(&amp;mutex_);<br>  SequenceNumber snapshot;<br>  if (options.snapshot != NULL) {<br>    snapshot = reinterpret_cast&lt;const SnapshotImpl</em>&gt;(options.snapshot)-&gt;number<em>;<br>  } else {<br>    snapshot = versions</em>-&gt;LastSequence();<br>  }</pre></p>
+<p>  MemTable<em> mem = mem_;<br>  MemTable</em> imm = imm<em>;<br>  Version* current = versions</em>-&gt;current();<br>  mem-&gt;Ref();<br>  if (imm != NULL) imm-&gt;Ref();</p>
+<h2 id="current-gt-Ref"><a href="#current-gt-Ref" class="headerlink" title="  current-&gt;Ref();"></a>  current-&gt;Ref();</h2><p>  {<br>    mutex_.Unlock();<br>    // mem与imm是带sequence_number以保证不会查到新数据<br>    // 查找顺序依次是：memtable、immutable memtable、sstable文件<br>    // First look in the memtable, then in the immutable memtable (if any).<br>    LookupKey lkey(key, snapshot);<br>    if (mem-&gt;Get(lkey, value, &amp;s)) {<br>      // Done<br>    } else if (imm != NULL &amp;&amp; imm-&gt;Get(lkey, value, &amp;s)) {<br>      // Done<br>    } else {<br>      s = current-&gt;Get(options, lkey, value, &amp;stats);<br>      have_stat_update = true;</p>
+<pre><code>}
+---
+</code></pre><p>  }<br><br>leveldb的snapshot机制不会在snapshot生成时直接影响系统，而是通过影响压缩操作来影响。比如redis的快照机制，其生成快照时，相当于dump整个内存中的db。<br>通过前面的Get分析，我们知道，因为SequenceNumber对查找的影响，使得后续的写是完全透明的。但compact操作会将写入的值与已有的值进行合并。这样，后续写入的值可能会覆盖前面已写过的值或者后续的删除操作删除了该key。实际上，在进行major compact时（minor compact只是将immunable memtable转储至1个level 0的sstable文件），会检查这些(key,value)的sequencenumber。当有相同key的多个操作序列时，正常情况下，只会按操作第一个序列（也就是最新的），后续的直接drop。但snapshot机制，会使得对于这些多个操作序列的除第一个之外的操作，只有sequencenumber比系统中最小的snapshot还小的才丢弃（实际细节比这个还复杂点）。这样，这些操作序列都会被保存下来用于后续的snapshot操作。这部分代码主要在DBImpl::DoCompactionWork函数中，更多细节有待我们讲述压缩机制时再来分析。</p>
+<p><pre></pre></p>
+<h2 id="Status-DBImpl-DoCompactionWork-CompactionState-compact"><a href="#Status-DBImpl-DoCompactionWork-CompactionState-compact" class="headerlink" title="Status DBImpl::DoCompactionWork(CompactionState* compact) {"></a>Status DBImpl::DoCompactionWork(CompactionState* compact) {</h2><p>   if (snapshots_.empty()) {<br>    compact-&gt;smallest<em>snapshot = versions</em>-&gt;LastSequence();<br>  } else {<br>    compact-&gt;smallest<em>snapshot = snapshots</em>.oldest()-&gt;number_;</p>
+<h2 id=""><a href="#" class="headerlink" title="  }"></a>  }</h2><p>  Iterator* input = versions_-&gt;MakeInputIterator(compact-&gt;compaction);<br>  input-&gt;SeekToFirst();<br>  Status status;<br>  ParsedInternalKey ikey;<br>  std::string current_user_key;<br>  bool has_current_user_key = false;<br>  SequenceNumber last_sequence_for_key = kMaxSequenceNumber;<br>  // 遍历输入<br>  for (; input-&gt;Valid() &amp;&amp; !shutting<em>down</em>.Acquire_Load(); ) {<br>    // Prioritize immutable compaction work</p>
+<pre><code>if (has_imm_.NoBarrier_Load() != NULL) {
+  ---
+}
+
+Slice key = input-&gt;key();
+if (compact-&gt;compaction-&gt;ShouldStopBefore(key) &amp;&amp;
+    compact-&gt;builder != NULL) {
+    // 输出新文件
+  status = FinishCompactionOutputFile(compact, input);
+  if (!status.ok()) {
+    break;
+  }
+}
+
+// Handle key/value, add to state, etc.
+bool drop = false;
+// 因为有delete、多次插入，同一个key可能出现多次
+if (!ParseInternalKey(key, &amp;ikey)) {
+  // Do not hide error keys
+  current_user_key.clear();
+  has_current_user_key = false;
+  last_sequence_for_key = kMaxSequenceNumber;
+} else {
+  if (!has_current_user_key ||
+     // 注意这里的比较是直接比较user_key，也就是不带sequencenumber
+      user_comparator()-&gt;Compare(ikey.user_key,
+                                 Slice(current_user_key)) != 0) {
+    // First occurrence of this user key
+    current_user_key.assign(ikey.user_key.data(), ikey.user_key.size());
+    has_current_user_key = true;
+    last_sequence_for_key = kMaxSequenceNumber;
+  }
+
+  if (last_sequence_for_key &lt;= compact-&gt;smallest_snapshot) {
+    // Hidden by an newer entry for same user key
+    // 多个key，后续的是更老的，直接drop，保留第一个
+    drop = true;    // (A)
+  } else if (ikey.type == kTypeDeletion &amp;&amp;
+             ikey.sequence &lt;= compact-&gt;smallest_snapshot &amp;&amp;
+             compact-&gt;compaction-&gt;IsBaseLevelForKey(ikey.user_key)) {
+    // For this user key:
+    // (1) there is no data in higher levels
+    // (2) data in lower levels will have larger sequence numbers
+    // (3) data in layers that are being compacted here and have
+    //     smaller sequence numbers will be dropped in the next
+    //     few iterations of this loop (by rule (A) above).
+    // Therefore this deletion marker is obsolete and can be dropped.
+    drop = true;
+  }
+
+  last_sequence_for_key = ikey.sequence;
+}
+---
+</code></pre><p><br>由于snapshot对压缩机制有影响，对snapshot后续插入的多个值都不会压缩。因此在使用时，用完后要尽可能快释放。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>Enjoy it ? Donate me !  欣赏此文？求鼓励，求支持！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="http://www.petermao.com/zhifu/weixin.png" alt="John Doe WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="http://www.petermao.com/zhifu/alipay.jpg" alt="John Doe Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/源码分析/" rel="tag"># 源码分析</a>
+          
+            <a href="/tags/leveldb/" rel="tag"># leveldb</a>
+          
+            <a href="/tags/存储/" rel="tag"># 存储</a>
+          
+            <a href="/tags/snapshot/" rel="tag"># snapshot</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/leveldb-7-key-value/" rel="next" title="leveldb注释7–key与value">
+                <i class="fa fa-chevron-left"></i> leveldb注释7–key与value
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/wordpress-to-hexo/" rel="prev" title="blog从wordpress迁移到github pages&hexo">
+                blog从wordpress迁移到github pages&hexo <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="leveldb-8-snapshot/"
+     data-title="leveldb注释8--snapshot机制"
+     data-content=""
+     data-url="http://www.petermao.com/leveldb-8-snapshot/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="leveldb-8-snapshot/"
+           data-title="leveldb注释8--snapshot机制" data-url="http://www.petermao.com/leveldb-8-snapshot/">
+      </div>
+
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="John Doe" />
+          <p class="site-author-name" itemprop="name">John Doe</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">38</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">54</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#current-gt-Ref"><span class="nav-number">1.</span> <span class="nav-text">  current->Ref();</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Status-DBImpl-DoCompactionWork-CompactionState-compact"><span class="nav-number">2.</span> <span class="nav-text">Status DBImpl::DoCompactionWork(CompactionState* compact) {</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#"><span class="nav-number">3.</span> <span class="nav-text">  }</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2011 - 2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">petermao</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"petermao"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("hoXyjAAO9zHsPml4rV37ttvT-gzGzoHsz", "21fHyiuqT1htJ6Hoh53cm42D");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            // $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            // $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            /*var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }*/
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var date_int = $visitors.attr('data-flag-date').trim();
+      var abc = new Date();
+      abc.setTime(date_int);
+      var date = abc.toISOString();
+      var category = $visitors.attr('data-flag-category').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                // $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("date", date);
+            newcounter.set("category", category);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                // $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+
+</body>
+</html>

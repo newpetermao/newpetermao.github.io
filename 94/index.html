@@ -1,0 +1,1183 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="petermao" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="这一节我们简略介绍下client连接的3个核心函数。涉及的很多参数跟redis的诸多特性有关，可在阅读后续章节后返回查看其相关值。
+redis将新client的连接状态保存在redisClient结构体中，该结构体的代码如下：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="redis源代码分析12–client连接（中）">
+<meta property="og:url" content="http://www.petermao.com/94/index.html">
+<meta property="og:site_name" content="petermao">
+<meta property="og:description" content="这一节我们简略介绍下client连接的3个核心函数。涉及的很多参数跟redis的诸多特性有关，可在阅读后续章节后返回查看其相关值。
+redis将新client的连接状态保存在redisClient结构体中，该结构体的代码如下：">
+<meta property="og:updated_time" content="2017-02-14T02:02:51.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="redis源代码分析12–client连接（中）">
+<meta name="twitter:description" content="这一节我们简略介绍下client连接的3个核心函数。涉及的很多参数跟redis的诸多特性有关，可在阅读后续章节后返回查看其相关值。
+redis将新client的连接状态保存在redisClient结构体中，该结构体的代码如下：">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: 'KHGF7KOV3V',
+      apiKey: '6d4bcebc9082d9fbca7e7eacc3bfa281',
+      indexName: 'blog',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"输入关键词","hits_empty":"没有找到与 ${query} 相关的内容","hits_stats":"${hits}条相关记录，共耗时 ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.petermao.com/94/"/>
+
+
+
+
+
+  <title> redis源代码分析12–client连接（中） | petermao </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">petermao</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle"></p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://www.petermao.com/94/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="John Doe">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="petermao">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="petermao" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                redis源代码分析12–client连接（中）
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2011-05-01T04:24:36+08:00">
+                2011-05-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              
+                <span>分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/redis/" itemprop="url" rel="index">
+                    <span itemprop="name">redis</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/94/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="94/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             
+             
+               
+                 
+                 
+               
+             
+             <span id="/94/" class="leancloud_visitors" data-flag-title="redis源代码分析12–client连接（中）" data-flag-date="1304195076000" data-flag-category="redis" >
+             </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这一节我们简略介绍下client连接的3个核心函数。涉及的很多参数跟redis的诸多特性有关，可在阅读后续章节后返回查看其相关值。</p>
+<p>redis将新client的连接状态保存在redisClient结构体中，该结构体的代码如下：<a id="more"></a></p>
+<pre>
+typedef struct redisClient {
+    int fd;              // client对应的文件描述符
+    redisDb *db;   // 当前操作的db
+    int dictid;       //
+    sds querybuf;  // 请求字符串
+    robj **argv, **mbargv;  // 解析请求后的参数数组（mbargv用于multi命令）
+    int argc, mbargc;
+    int bulklen;            /* bulk read len. -1 if not in bulk read mode */
+    int multibulk;          /* multi bulk command format active */
+    list *reply;           
+    int sentlen;
+    time_t lastinteraction; /* time of the last interaction, used for timeout */
+    int flags;              /* REDIS_SLAVE | REDIS_MONITOR | REDIS_MULTI ... */
+    int slaveseldb;         /* slave selected db, if this client is a slave */
+    int authenticated;      /* when requirepass is non-NULL */
+    int replstate;          /* replication state if this is a slave */
+    int repldbfd;           /* replication DB file descriptor */
+    long repldboff;         /* replication DB file offset */
+    off_t repldbsize;       /* replication DB file size */
+    multiState mstate;      /* MULTI/EXEC state */
+    robj **blockingkeys;    /* The key we are waiting to terminate a blocking
+                             * operation such as BLPOP. Otherwise NULL. */
+    int blockingkeysnum;    /* Number of blocking keys */
+    time_t blockingto;      /* Blocking operation timeout. If UNIX current time
+                             * is >= blockingto then the operation timed out. */
+    list *io_keys;          /* Keys this client is waiting to be loaded from the
+                             * swap file in order to continue. */
+    dict *pubsub_channels;  /* channels a client is interested in (SUBSCRIBE) */
+    list *pubsub_patterns;  /* patterns a client is interested in (SUBSCRIBE) */
+} redisClient;
+</pre>
+新建client状态是用createClient函数完成，释放是用freeClient，超时是用closeTimedoutClients。
+
+createClient 在上一节中的acceptHandler中被调用，一开始会将client设置成非阻塞、非延迟的，然后设置client有read事件时的处理函数 readQueryFromClient，接着默认选择db 0，清空命令缓冲区和参数数组等，最后将client加到全局的server.clients中。详细代码如下：
+<pre>
+static redisClient *createClient(int fd) {
+    redisClient *c = zmalloc(sizeof(*c));
+
+    anetNonBlock(NULL,fd);
+    anetTcpNoDelay(NULL,fd);
+    if (!c) return NULL;
+    if (aeCreateFileEvent(server.el,fd,AE_READABLE,
+        readQueryFromClient, c) == AE_ERR)
+    {
+        close(fd);
+        zfree(c);
+        return NULL;
+    }
+
+    selectDb(c,0);
+    c->fd = fd;
+    c->querybuf = sdsempty();
+    c->argc = 0;
+    c->argv = NULL;
+    c->bulklen = -1;
+    c->multibulk = 0;
+    c->mbargc = 0;
+    c->mbargv = NULL;
+    c->sentlen = 0;
+    c->flags = 0;
+    c->lastinteraction = time(NULL);
+    c->authenticated = 0;
+    c->replstate = REDIS_REPL_NONE;
+    c->reply = listCreate();
+    listSetFreeMethod(c->reply,decrRefCount);
+    listSetDupMethod(c->reply,dupClientReplyValue);
+    c->blockingkeys = NULL;
+    c->blockingkeysnum = 0;
+    c->io_keys = listCreate();
+    listSetFreeMethod(c->io_keys,decrRefCount);
+    c->pubsub_channels = dictCreate(&setDictType,NULL);
+    c->pubsub_patterns = listCreate();
+    listSetFreeMethod(c->pubsub_patterns,decrRefCount);
+    listSetMatchMethod(c->pubsub_patterns,listMatchObjects);
+    listAddNodeTail(server.clients,c);
+    initClientMultiState(c);
+    return c;
+}
+</pre>
+freeClient用于释放client连接状态，在redis接收的client数超过了配置的 server.maxclients、读写client信息出错时、client连接超时时，都会被调用。
+<pre>
+static void freeClient(redisClient *c) {
+    listNode *ln;
+
+    /* Note that if the client we are freeing is blocked into a blocking
+     * call, we have to set querybuf to NULL *before* to call
+     * unblockClientWaitingData() to avoid processInputBuffer() will get
+     * called. Also it is important to remove the file events after
+     * this, because this call adds the READABLE event. */
+     // 释放querybuf
+    sdsfree(c->querybuf);
+    c->querybuf = NULL;
+    if (c->flags & REDIS_BLOCKED)
+        unblockClientWaitingData(c);
+
+    /* Unsubscribe from all the pubsub channels */
+    // 释放channel
+
+    pubsubUnsubscribeAllChannels(c,0);
+    pubsubUnsubscribeAllPatterns(c,0);
+    dictRelease(c->pubsub_channels);
+    listRelease(c->pubsub_patterns);
+    /* Obvious cleanup */
+    aeDeleteFileEvent(server.el,c->fd,AE_READABLE);
+    aeDeleteFileEvent(server.el,c->fd,AE_WRITABLE);
+    listRelease(c->reply);
+    freeClientArgv(c);
+    close(c->fd);
+    /* Remove from the list of clients */
+    ln = listSearchKey(server.clients,c);
+    redisAssert(ln != NULL);
+    listDelNode(server.clients,ln);
+
+    /* Remove from the list of clients waiting for swapped keys, or ready
+     * to be restarted, but not yet woken up again. */
+     // 从io等待队列中删除client
+    if (c->flags & REDIS_IO_WAIT) {
+        redisAssert(server.vm_enabled);
+        if (listLength(c->io_keys) == 0) {
+            ln = listSearchKey(server.io_ready_clients,c);
+
+            /* When this client is waiting to be woken up (REDIS_IO_WAIT),
+             * it should be present in the list io_ready_clients */
+            redisAssert(ln != NULL);
+            listDelNode(server.io_ready_clients,ln);
+        } else {
+            while (listLength(c->io_keys)) {
+                ln = listFirst(c->io_keys);
+                dontWaitForSwappedKey(c,ln->value);
+            }
+        }
+        server.vm_blocked_clients--;
+    }
+    listRelease(c->io_keys);
+    /* Master/slave cleanup */
+    if (c->flags & REDIS_SLAVE) {
+        if (c->replstate == REDIS_REPL_SEND_BULK && c->repldbfd != -1)
+            close(c->repldbfd);
+        list *l = (c->flags & REDIS_MONITOR) ? server.monitors : server.slaves;
+        ln = listSearchKey(l,c);
+        redisAssert(ln != NULL);
+        listDelNode(l,ln);
+    }
+    if (c->flags & REDIS_MASTER) {
+        server.master = NULL;
+        server.replstate = REDIS_REPL_CONNECT;
+    }
+    /* Release memory */
+    zfree(c->argv);
+    zfree(c->mbargv);
+    freeClientMultiState(c);
+    zfree(c);
+}
+</pre>
+closeTimedoutClients在serverCron中被调用。
+<pre>
+static void closeTimedoutClients(void) {
+    redisClient *c;
+    listNode *ln;
+    time_t now = time(NULL);
+    listIter li;
+
+    listRewind(server.clients,&li);
+    while ((ln = listNext(&li)) != NULL) {
+        c = listNodeValue(ln);
+        if (server.maxidletime &&
+            !(c->flags & REDIS_SLAVE) &&    /* no timeout for slaves */
+            !(c->flags & REDIS_MASTER) &&   /* no timeout for masters */
+            dictSize(c->pubsub_channels) == 0 && /* no timeout for pubsub */
+            listLength(c->pubsub_patterns) == 0 &&
+            (now - c->lastinteraction > server.maxidletime))
+        {
+            redisLog(REDIS_VERBOSE,"Closing idle client");
+            freeClient(c);
+        } else if (c->flags & REDIS_BLOCKED) {
+            if (c->blockingto != 0 && c->blockingto < now) {
+                addReply(c,shared.nullmultibulk);
+                unblockClientWaitingData(c);
+            }
+        }
+    }
+}
+</pre>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>Enjoy it ? Donate me !  欣赏此文？求鼓励，求支持！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="http://www.petermao.com/zhifu/weixin.png" alt="John Doe WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="http://www.petermao.com/zhifu/alipay.jpg" alt="John Doe Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/92/" rel="next" title="redis源代码分析11–client连接（上）">
+                <i class="fa fa-chevron-left"></i> redis源代码分析11–client连接（上）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/96/" rel="prev" title="redis源代码分析13–client连接（下）">
+                redis源代码分析13–client连接（下） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="94/"
+     data-title="redis源代码分析12–client连接（中）"
+     data-content=""
+     data-url="http://www.petermao.com/94/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="94/"
+           data-title="redis源代码分析12–client连接（中）" data-url="http://www.petermao.com/94/">
+      </div>
+
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="John Doe" />
+          <p class="site-author-name" itemprop="name">John Doe</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">38</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">54</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2011 - 2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">petermao</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"petermao"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("hoXyjAAO9zHsPml4rV37ttvT-gzGzoHsz", "21fHyiuqT1htJ6Hoh53cm42D");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            // $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            // $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            /*var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }*/
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var date_int = $visitors.attr('data-flag-date').trim();
+      var abc = new Date();
+      abc.setTime(date_int);
+      var date = abc.toISOString();
+      var category = $visitors.attr('data-flag-category').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                // $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("date", date);
+            newcounter.set("category", category);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                // $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+
+</body>
+</html>
